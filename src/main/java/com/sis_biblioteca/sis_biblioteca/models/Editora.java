@@ -1,4 +1,4 @@
-package com.pedro.models;
+package com.sis_biblioteca.sis_biblioteca.models;
 
 public class Editora {
 
