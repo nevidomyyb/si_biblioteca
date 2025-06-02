@@ -9,14 +9,14 @@ public class Aluno extends Pessoa{
 
     public Aluno(
             String cpf, String nome, String telefone, String email,
-            Endereco endereco, String curso, String periodo,
+            int enderecoId, String curso, String periodo,
             String turno, String matricula
     ) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
-        this.endereco = endereco;
+        this.enderecoId = enderecoId;
         this.curso = curso;
         this.periodo = periodo;
         this.turno = turno;

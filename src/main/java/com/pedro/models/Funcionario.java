@@ -6,13 +6,13 @@ public class Funcionario extends Pessoa{
 
     public Funcionario(
             String cpf, String nome, String telefone, String email,
-            Endereco endereco, String credencial
+            int enderecoId, String credencial
     ) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
-        this.endereco = endereco;
+        this.enderecoId = enderecoId;
         this.credencial = credencial;
     }
 

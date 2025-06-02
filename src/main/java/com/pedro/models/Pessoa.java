@@ -7,18 +7,18 @@ public abstract class Pessoa {
     protected String telefone;
     protected String email;
     protected String cpf;
-    protected Endereco endereco;
+    protected int enderecoId;
 
     public int getId() {
         return id;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public int getEnderecoId() {
+        return enderecoId;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setEnderecoId(int id) {
+        this.enderecoId = id;
     }
 
     public String getCpf() {

@@ -5,19 +5,19 @@ public class Editora {
     private int id;
     private String nome;
     private String cnpj;
-    private Endereco enderecoMatriz;
+    private int enderecoMatrizId;
 
     public Editora(String nome, String cnpj) {
         this.nome = nome;
         this.cnpj = cnpj;
     }
 
-    public Endereco getEnderecoMatriz() {
-        return enderecoMatriz;
+    public int getEnderecoMatrizId() {
+        return enderecoMatrizId;
     }
 
-    public void setEnderecoMatriz(Endereco enderecoMatriz) {
-        this.enderecoMatriz = enderecoMatriz;
+    public void setEnderecoMatrizId(int enderecoMatrizId) {
+        this.enderecoMatrizId = enderecoMatrizId;
     }
 
     public int getId() {

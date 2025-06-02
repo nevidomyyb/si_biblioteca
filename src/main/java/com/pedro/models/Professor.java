@@ -7,13 +7,13 @@ public class Professor extends Pessoa{
 
     public Professor(
             String cpf, String nome, String telefone, String email,
-            Endereco endereco, String disciplina, String credencial
+            int endereco, String disciplina, String credencial
     ) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
-        this.endereco = endereco;
+        this.enderecoId = enderecoId;
         this.disciplina = disciplina;
         this.credencial = credencial;
     }
