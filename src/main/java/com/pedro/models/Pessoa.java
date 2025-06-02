@@ -8,6 +8,24 @@ public abstract class Pessoa {
     protected String email;
     protected String cpf;
     protected int enderecoId;
+    protected String login;
+    protected String senha;
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     public int getId() {
         return id;

@@ -6,14 +6,15 @@ public class Funcionario extends Pessoa{
 
     public Funcionario(
             String cpf, String nome, String telefone, String email,
-            int enderecoId, String credencial
+            String credencial, String login, String senha
     ) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
-        this.enderecoId = enderecoId;
         this.credencial = credencial;
+        this.login = login;
+        this.senha = senha;
     }
 
     public String getCredencial() {
