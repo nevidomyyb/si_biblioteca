@@ -1,4 +1,3 @@
-
 CREATE DATABASE sis_biblioteca;
 USE sis_biblioteca;
 -- Criar tabela Autor
@@ -24,7 +23,7 @@ CREATE TABLE professor (
                            disciplina varchar(50) not null,
                            credencial varchar(10) not null,
                            cpf varchar(11) not null,
-                           endereco_id int , constraint fk_professor_endereco foreign key (endereco_id) references endereco(id),
+                           endereco_id int null, constraint fk_professor_endereco foreign key (endereco_id) references endereco(id),
                            login varchar(12) not null unique,
                            senha text not null
 );
@@ -39,7 +38,7 @@ CREATE TABLE aluno (
                        turno varchar(30) not null,
                        matricula varchar(10) not null,
                        cpf varchar(11) not null,
-                       endereco_id int , constraint fk_aluno_endereco foreign key (endereco_id) references endereco(id),
+                       endereco_id int null, constraint fk_aluno_endereco foreign key (endereco_id) references endereco(id),
                        login varchar(12) not null unique,
                        senha text not null
 );
@@ -51,7 +50,7 @@ CREATE TABLE funcionario (
                              email varchar(50) not null,
                              credencial varchar(10) not null,
                              cpf varchar(11) not null,
-                             endereco_id int , constraint fk_funcionario_endereco foreign key (endereco_id) references endereco(id),
+                             endereco_id int null, constraint fk_funcionario_endereco foreign key (endereco_id) references endereco(id),
                              login varchar(12) not null unique,
                              senha text not null
 );
@@ -60,7 +59,7 @@ CREATE TABLE editora(
                         id int primary key auto_increment,
                         nome varchar(100) not null,
                         cnpj varchar(14) not null,
-                        endereco_id int , constraint fk_editora_endereco foreign key (endereco_id) references endereco(id)
+                        endereco_id int null, constraint fk_editora_endereco foreign key (endereco_id) references endereco(id)
 );
 -- Criar tabela Livro
 CREATE TABLE livro(
