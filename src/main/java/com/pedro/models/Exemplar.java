@@ -20,4 +20,8 @@ public class Exemplar {
     public void setLivroId(int livroId) {
         this.livroId = livroId;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

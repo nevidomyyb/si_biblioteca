@@ -70,4 +70,8 @@ public class Livro {
     public void setAutorId(int autorId) {
         this.autorId = autorId;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
