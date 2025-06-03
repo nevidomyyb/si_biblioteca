@@ -48,11 +48,7 @@ public class FuncionarioDAO {
 
     public void cadastrarFuncionario(Funcionario funcionario) {
         AutenticacaoDAO autenticacaoDAO = new AutenticacaoDAO();
-        try {
-            boolean sucesso = autenticacaoDAO.cadastrarUsuario(funcionario, null, null);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        boolean sucesso = autenticacaoDAO.cadastrarUsuario(funcionario, null, null);
 
     }
     public ResultSet listarFuncionarios() {

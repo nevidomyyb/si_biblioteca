@@ -52,11 +52,7 @@ public class AlunoDAO {
 
     public void cadastrarAluno(Aluno aluno) {
         AutenticacaoDAO autenticacaoDAO = new AutenticacaoDAO();
-        try {
-            boolean sucesso = autenticacaoDAO.cadastrarUsuario(null, aluno, null);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        boolean sucesso = autenticacaoDAO.cadastrarUsuario(null, aluno, null);
 
     }
 
