@@ -1,6 +1,6 @@
 package com.pedro.models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Autor {
 
@@ -8,6 +8,8 @@ public class Autor {
     private String nome;
     private Date dataNascimento;
     private String pseudonimo;
+
+    public Autor(){}
 
     public Autor(String nome, Date dataNascimento, String pseudonimo) {
         this.nome = nome;

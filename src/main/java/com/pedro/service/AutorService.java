@@ -1,6 +1,9 @@
 package com.pedro.service;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pedro.dao.AutorDAO;
 import com.pedro.models.Autor;
@@ -13,8 +16,24 @@ public class AutorService {
         autorDao = new AutorDAO();
     }
 
-    public ResultSet listar(){
-        return autorDao.listar();
+    public List<Autor> listar(){
+        List<Autor> autorList = null;
+        try{
+            ResultSet autores = autorDao.listar();
+            autorList = new ArrayList<Autor>();
+            while(autores.next()){
+                Autor autor = new Autor();
+                autor.setId(autores.getInt("id"));
+                autor.setNome(autores.getString("nome"));
+                autor.setDataNascimento(autores.getDate("data_nascimento"));
+                autor.setPseudonimo(autores.getString("pseudonimo"));
+                autorList.add(autor);
+            }
+            return autorList;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return autorList;
     }
 
 
@@ -46,12 +65,12 @@ public class AutorService {
     }
 
 
-    public boolean excluir(Autor autor){
-        if (autor.getId() == 0){
+    public boolean excluir(int id){
+        if (id == 0){
             return false;
         }
 
-        boolean succ = autorDao.excluir(autor.getId());
+        boolean succ = autorDao.excluir(id);
         if (!succ) {
             return false;
         }
@@ -64,7 +83,7 @@ public class AutorService {
         return str == null || str.isEmpty();
     }
 
-    public boolean editar(Autor autor){
+    public boolean editar(int id, Autor autor){
         
         if (isNullOrEmpty(autor.getNome())) {
             System.err.println("[!] Nome do autor é obrigatório.");
@@ -81,7 +100,7 @@ public class AutorService {
             return false;
         }
 
-        boolean succ = autorDao.editar(autor.getId(), autor);
+        boolean succ = autorDao.editar(id, autor);
         if(!succ){
             return false;
         }

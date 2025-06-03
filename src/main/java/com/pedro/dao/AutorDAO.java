@@ -35,7 +35,7 @@ public class AutorDAO {
             );
 
             ps.setString(1, autor.getNome());
-            ps.setDate(2, new Date(autor.getDataNascimento().getTime()));
+            ps.setDate(2, autor.getDataNascimento());
             ps.setString(3, autor.getPseudonimo());
 
             ps.executeUpdate();

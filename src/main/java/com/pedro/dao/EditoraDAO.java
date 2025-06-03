@@ -77,7 +77,11 @@ public class EditoraDAO {
             
             ps.setString(1, editora.getNome());
             ps.setString(2, editora.getCnpj());
-            ps.setInt(3, editora.getEnderecoMatrizId());
+            if (editora.getEnderecoMatrizId() == 0) {
+                ps.setNull(3, Types.INTEGER);
+            } else {
+                ps.setInt(3, editora.getEnderecoMatrizId());
+            }
             ps.setInt(4, id);
 
             ps.executeUpdate();

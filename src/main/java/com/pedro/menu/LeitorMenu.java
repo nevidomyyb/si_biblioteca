@@ -64,7 +64,7 @@ public class LeitorMenu {
                     String tipoUsuario = scanner.nextLine().trim();
                     int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
                     if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
-                        System.out.println("[1] Tipo de Usuário inválido");
+                        System.out.println("[!] Tipo de Usuário inválido");
                     }
                     else if (tipoUsuarioInt == 1) {
                         System.out.println("Curso:");

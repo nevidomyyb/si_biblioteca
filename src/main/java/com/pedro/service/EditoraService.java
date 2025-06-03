@@ -40,12 +40,12 @@ public class EditoraService {
         return true;
     }
 
-    public boolean excluir(Editora editora){
-        if(editora.getId() == 0){
+    public boolean excluir(int id){
+        if(id == 0){
             return false;
         }
 
-        boolean succ = editoraDao.excluir(editora.getId());
+        boolean succ = editoraDao.excluir(id);
         if (!succ) {
             return false;
         }
@@ -53,7 +53,7 @@ public class EditoraService {
         return true;
     }
 
-    public boolean editar(Editora editora){
+    public boolean editar(int id, Editora editora){
 
         if(isNullOrEmpty(editora.getNome())){
             System.out.println("[!] O nome da Editora é obrigatório");
@@ -65,7 +65,7 @@ public class EditoraService {
             return false;
         }
 
-        boolean succ = editoraDao.editar(editora.getId(), editora);
+        boolean succ = editoraDao.editar(id, editora);
         if (!succ) {
             return false;
         }
