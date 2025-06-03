@@ -3,7 +3,11 @@ package com.pedro.service;
 import com.pedro.dao.AlunoDAO;
 import com.pedro.models.Aluno;
 
+import javax.xml.transform.Result;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlunoService {
 
@@ -27,7 +31,32 @@ public class AlunoService {
         return null;
     }
 
-    public ResultSet listarAlunos(){ return alunoDAO.listarAlunos();
+    public List<Aluno> listarAlunos() {
+        List<Aluno> alunosList = null;
+        try {
+            ResultSet alunos = alunoDAO.listarAlunos();
+            alunosList = new ArrayList<Aluno>();
+            while (alunos.next()) {
+                Aluno aluno = new Aluno();
+                aluno.setId(alunos.getInt("id"));
+                aluno.setCpf(alunos.getString("cpf"));
+                aluno.setNome(alunos.getString("nome"));
+                aluno.setTelefone(alunos.getString("telefone"));
+                aluno.setEmail(alunos.getString("email"));
+                aluno.setCurso(alunos.getString("curso"));
+                aluno.setPeriodo(alunos.getString("periodo"));
+                aluno.setTurno(alunos.getString("turno"));
+                aluno.setMatricula(alunos.getString("matricula"));
+                aluno.setLogin(alunos.getString("login"));
+                aluno.setSenha(alunos.getString("senha"));
+                aluno.setEnderecoId(alunos.getInt("endereco_id"));
+                alunosList.add(aluno);
+            }
+            return alunosList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return alunosList;
     }
 
     public boolean editarAluno(int id, Aluno aluno) {

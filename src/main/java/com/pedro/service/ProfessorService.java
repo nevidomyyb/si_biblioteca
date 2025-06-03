@@ -6,6 +6,9 @@ import com.pedro.models.Funcionario;
 import com.pedro.models.Professor;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfessorService {
 
@@ -29,7 +32,29 @@ public class ProfessorService {
         return null;
     }
 
-    public ResultSet listarProfessors(){ return professorDAO.listarProfessores();
+    public List<Professor> listarProfessors(){
+        List<Professor> professorList = null;
+        try {
+            ResultSet rs = professorDAO.listarProfessores();
+            professorList = new ArrayList<Professor>();
+            while (rs.next()) {
+                Professor prof = new Professor();
+                prof.setCpf(rs.getString("cpf"));
+                prof.setNome(rs.getString("nome"));
+                prof.setTelefone(rs.getString("telefone"));
+                prof.setEmail(rs.getString("email"));
+                prof.setEnderecoId(rs.getInt("endereco_id"));
+                prof.setDisciplina(rs.getString("disciplina"));
+                prof.setCredencial(rs.getString("credencial"));
+                prof.setLogin(rs.getString("login"));
+                prof.setSenha(rs.getString("senha"));
+                professorList.add(prof);
+
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return professorList;
     }
 
     public boolean editarProfessor(int id, Professor professor) {

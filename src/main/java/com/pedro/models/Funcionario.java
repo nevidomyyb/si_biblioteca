@@ -4,6 +4,8 @@ public class Funcionario extends Pessoa{
 
     private String credencial;
 
+    public Funcionario() {}
+
     public Funcionario(
             String cpf, String nome, String telefone, String email,
             String credencial, int enderecoId,String login, String senha

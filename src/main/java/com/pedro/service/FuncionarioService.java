@@ -5,6 +5,9 @@ import com.pedro.models.Aluno;
 import com.pedro.models.Funcionario;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FuncionarioService {
 
@@ -28,7 +31,28 @@ public class FuncionarioService {
         return null;
     }
 
-    public ResultSet listarFuncionarios(){ return funcionarioDAO.listarFuncionarios();
+    public List<Funcionario> listarFuncionarios(){
+        List<Funcionario> funcionarioList = null;
+        try {
+            ResultSet rs = funcionarioDAO.listarFuncionarios();
+            funcionarioList = new ArrayList<Funcionario>();
+            while (rs.next()) {
+                Funcionario func = new Funcionario();
+                func.setCpf(rs.getString("cpf"));
+                func.setNome(rs.getString("nome"));
+                func.setTelefone(rs.getString("telefone"));
+                func.setEmail(rs.getString("email"));
+                func.setCredencial(rs.getString("credencial"));
+                func.setEnderecoId(rs.getInt("endereco_id"));
+                func.setLogin(rs.getString("login"));
+                func.setSenha(rs.getString("senha"));
+
+                funcionarioList.add(func);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return funcionarioList;
     }
 
     public boolean editarFuncionario(int id, Funcionario funcionario) {

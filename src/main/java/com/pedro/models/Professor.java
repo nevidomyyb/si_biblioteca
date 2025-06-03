@@ -5,6 +5,10 @@ public class Professor extends Pessoa{
     private String disciplina;
     private String credencial;
 
+    public Professor() {
+
+    }
+
     public Professor(
             String cpf, String nome, String telefone, String email,
             int endereco, String disciplina, String credencial,
