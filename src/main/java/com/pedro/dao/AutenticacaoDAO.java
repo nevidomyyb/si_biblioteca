@@ -207,7 +207,7 @@ public class AutenticacaoDAO {
 
         Funcionario f1 = new Funcionario(
           "07066373480", "Pedro", "82993362376",
-          "idk.pedroc@gmail.com",  "abcdefg","pedro1", "Senha!123"
+          "idk.pedroc@gmail.com",  "abcdefg",0,"pedro1", "Senha!123"
         );
         boolean success = dao.cadastrarUsuario(f1, null, null);
         System.out.println(dao.autenticar(f1.getLogin(), "Senha!123"));

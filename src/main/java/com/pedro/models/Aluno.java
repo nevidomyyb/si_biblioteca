@@ -10,7 +10,7 @@ public class Aluno extends Pessoa{
     public Aluno(
             String cpf, String nome, String telefone, String email,
             int enderecoId, String curso, String periodo,
-            String turno, String matricula
+            String turno, String matricula, String login, String senha
     ) {
         this.cpf = cpf;
         this.nome = nome;
@@ -21,6 +21,8 @@ public class Aluno extends Pessoa{
         this.periodo = periodo;
         this.turno = turno;
         this.matricula = matricula;
+        this.login = login;
+        this.senha = senha;
     }
 
     public String getCurso() {
