@@ -27,9 +27,15 @@ public class AutenticacaoDAO {
             Funcionario funcionario,
             Aluno aluno,
             Professor professor
-    ) throws NoSuchAlgorithmException {
+    )  {
         if (professor != null) {
-            String senhaHashed = Senha.hashSenha(professor.getSenha());
+            String senhaHashed;
+            try {
+                senhaHashed = Senha.hashSenha(professor.getSenha());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return false;
+            }
 
             String SQL = """
             INSERT INTO professor 
@@ -53,12 +59,11 @@ public class AutenticacaoDAO {
                     ps.setInt(7, professor.getEnderecoId());
                 }
                 ps.setString(8, professor.getLogin());
-                ps.setString(9, professor.getSenha());
+                ps.setString(9, senhaHashed);
                 ps.executeUpdate();
                 return true;
             } catch (SQLException e){
                 e.printStackTrace();
-                System.out.println("Erro ao cadastrar usuario - professor'");
                 return false;
             }
 
@@ -66,7 +71,13 @@ public class AutenticacaoDAO {
 
 
         else if (aluno != null) {
-            String senhaHashed = Senha.hashSenha(aluno.getSenha());
+            String senhaHashed;
+            try {
+                senhaHashed = Senha.hashSenha(aluno.getSenha());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return false;
+            }
             String SQL = """
             INSERT INTO aluno
             (id, nome, telefone, email, curso, periodo, turno, matricula,
@@ -98,14 +109,19 @@ public class AutenticacaoDAO {
                 return true;
             } catch (SQLException e){
                 e.printStackTrace();
-                System.out.println("Erro ao cadastrar usuario - aluno");
                 return false;
 
             }
         }
 
         else if (funcionario != null) {
-            String senhaHashed = Senha.hashSenha(funcionario.getSenha());
+            String senhaHashed;
+            try {
+                senhaHashed = Senha.hashSenha(funcionario.getSenha());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return false;
+            }
 
             String SQL = """
             INSERT INTO funcionario
@@ -133,7 +149,6 @@ public class AutenticacaoDAO {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("Erro ao cadastrar usuario - funcionário");
                 return false;
             }
 
@@ -142,7 +157,7 @@ public class AutenticacaoDAO {
         return false;
     }
 
-    public boolean autenticar(String login, String senha) {
+    public String autenticar(String login, String senha) {
         try {
             boolean encontrado = false;
             int idEncontrado = 0;
@@ -188,16 +203,17 @@ public class AutenticacaoDAO {
                 tipoUsuario = "Professor";
             }
             if (!encontrado || loginEncontrado.isEmpty()) {
-                return false;
+                return "";
             }
 
             boolean valido = Senha.verificarSenha(senha, senhaEncontrado);
-            return Objects.equals(login, loginEncontrado) && valido;
-
+            if (Objects.equals(login, loginEncontrado) && valido) {
+                return tipoUsuario;
+            }
+            return "";
         } catch (SQLException | NoSuchAlgorithmException e) {
             e.printStackTrace();
-            System.out.println("Erro ao autenticar");
-            return false;
+            return "";
         }
     }
 
