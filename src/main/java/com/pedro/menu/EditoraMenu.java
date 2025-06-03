@@ -1,6 +1,7 @@
 package com.pedro.menu;
 
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
@@ -51,14 +52,14 @@ public class EditoraMenu {
     }
 
     public void listarEditora() {
-        ResultSet editoras = editoraService.listar();
-        try {
-            while (editoras.next()) {
-                System.out.println("ID: " + editoras.getInt("id") + " - Nome: " + editoras.getString("nome"));
+        List<Editora> editoras = editoraService.listar();
+        System.out.println("Editoras");
+        System.out.println("ID | Nome | CNPJ ");
+        if (!editoras.isEmpty()) {
+            for(Editora editora : editoras){
+                int max = editora.getNome().length() < 11 ? editora.getNome().length() : 12;
+                System.out.println("[" + editora.getId() + "] " + editora.getNome().substring(0, max) + " - " + editora.getCnpj());
             }
-            System.out.println();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

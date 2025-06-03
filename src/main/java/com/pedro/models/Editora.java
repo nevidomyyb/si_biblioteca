@@ -7,6 +7,8 @@ public class Editora {
     private String cnpj;
     private int enderecoMatrizId;
 
+    public Editora(){}
+
     public Editora(String nome, String cnpj) {
         this.nome = nome;
         this.cnpj = cnpj;
@@ -22,6 +24,10 @@ public class Editora {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getNome() {

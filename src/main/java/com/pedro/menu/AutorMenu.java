@@ -34,10 +34,9 @@ public class AutorMenu {
         if(!autores.isEmpty()){
             for(Autor autor : autores){
                 int max = autor.getNome().length() < 11 ? autor.getNome().length() : 12;
-                System.out.println("[" + autor.getId() + "]" + autor.getNome().substring(0, max));
+                System.out.println("[" + autor.getId() + "]" + autor.getNome().substring(0, max) + " - " + autor.getDataNascimento() + " - " + autor.getPseudonimo());
             }
         }
-        
     }
 
     public void editarAutor(){
@@ -45,17 +44,17 @@ public class AutorMenu {
             listarAutores();
             System.out.println();
 
-            System.out.println("Escolha o id do Autor: ");
+            System.out.println("[!] Escolha o id do Autor: ");
             int id = scanner.nextInt();
             scanner.nextLine();
 
-            System.out.println("Digite o nome do autor: ");
+            System.out.println("[!] Digite o nome do autor: ");
             String nome = scanner.nextLine();
 
-            System.out.println("Digite a data de nascimento do autor: ");
+            System.out.println("[!] Digite a data de nascimento do autor: ");
             Date dataNascimento = DataUtils.stringToSqlDate(scanner.nextLine());
 
-            System.out.println("Digite o pseudonimo do Autor");
+            System.out.println("[!] Digite o pseudonimo do Autor");
             String pseudonimo = scanner.nextLine();
 
             autorService.editar(id, new Autor(nome, dataNascimento, pseudonimo));
@@ -70,7 +69,7 @@ public class AutorMenu {
             listarAutores();
             System.out.println();
 
-            System.out.println("Escolha o id do Autor: ");
+            System.out.println("[!] Escolha o id do Autor: ");
             int id = scanner.nextInt();
             scanner.nextLine();
 

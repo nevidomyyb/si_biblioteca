@@ -1,6 +1,9 @@
 package com.pedro.service;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pedro.dao.EditoraDAO;
 import com.pedro.models.Editora;
@@ -17,8 +20,24 @@ public class EditoraService {
         return str == null || str.isEmpty();
     }
 
-    public ResultSet listar(){
-        return editoraDao.listar();
+    public List<Editora> listar(){
+        List<Editora> editoraList = null;
+        try {
+            ResultSet editoras = editoraDao.listar();
+            editoraList = new ArrayList<Editora>();
+            while (editoras.next()) {
+                Editora editora = new Editora();
+                editora.setId(editoras.getInt("id"));
+                editora.setNome(editoras.getString("nome"));
+                editora.setCnpj(editoras.getString("cnpj"));
+                editoraList.add(editora);
+            }
+            return editoraList;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public boolean inserir(Editora editora){
