@@ -1,14 +1,13 @@
 package com.pedro.models;
 
 import java.util.Date;
-import com.pedro.models.Pessoa;
 
 public class Operacao {
 
     private int id;
     private int funcionarioLocacaoId;
     private int funcionarioDevolucaoId;
-    private Pessoa pessoa;
+    private int locador;
     private int exemplarId;
     private TipoOperacao tipoOperacao;
     private Date dataLocacao;
@@ -16,17 +15,16 @@ public class Operacao {
     private Date dataDevolvido;
 
     public Operacao(
-            int funcionarioLocacaoId, Pessoa pessoa,
+            int funcionarioLocacaoId, int locador,
             int exemplarId, TipoOperacao tipoOperacao, Date dataLocacao,
             Date dataDevolucao
     ) {
         this.funcionarioLocacaoId = funcionarioLocacaoId;
-        this.pessoa = pessoa;
+        this.locador = locador;
         this.exemplarId = exemplarId;
         this.tipoOperacao = tipoOperacao;
         this.dataLocacao = dataLocacao;
         this.dataDevolucao = dataDevolucao;
-
     }
 
     public int getId() {
@@ -49,12 +47,12 @@ public class Operacao {
         this.funcionarioDevolucaoId = funcionarioDevolucaoId;
     }
 
-    public Pessoa getPessoa() {
-        return this.pessoa;
+    public int getLocador() {
+        return this.locador;
     }
 
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
+    public void setLocador(int locador) {
+        this.locador = locador;
     }
 
     public int getExemplarId() {
