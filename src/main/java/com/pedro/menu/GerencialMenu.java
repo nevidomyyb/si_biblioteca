@@ -8,7 +8,7 @@ import com.pedro.config.IO;
 
 
 
-public class Gerencial {
+public class GerencialMenu {
     private IO io = new IO();
 
     private EditoraMenu editoraMenu = new EditoraMenu();
@@ -106,8 +106,10 @@ public class Gerencial {
                     break;
                 case 2:
                     imprimirMenuAutor();
+                    break;
                 case 3:
                     imprimirMenuGenero();
+                    break;
                 default:
                     System.out.println("Opção inválida.");
             }
@@ -117,7 +119,7 @@ public class Gerencial {
     }
 
     public static void main(String[] args) {
-        Gerencial gerencial = new Gerencial();
+        GerencialMenu gerencial = new GerencialMenu();
 
         gerencial.imprimirMenuGerencial();
     }
