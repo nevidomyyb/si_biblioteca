@@ -34,7 +34,7 @@ public class AutorMenu {
         if(!autores.isEmpty()){
             for(Autor autor : autores){
                 int max = autor.getNome().length() < 11 ? autor.getNome().length() : 12;
-                System.out.println("[" + autor.getId() + "]" + autor.getNome().substring(0, max) + " - " + autor.getDataNascimento() + " - " + autor.getPseudonimo());
+                System.out.println("[" + autor.getId() + "] " + autor.getNome().substring(0, max) + " - " + autor.getDataNascimento() + " - " + autor.getPseudonimo());
             }
         }
     }
