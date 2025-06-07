@@ -75,12 +75,13 @@ public class AlunoDAO {
             if (rs.next()) {
                 aluno = new Aluno(
                         rs.getString("cpf"), rs.getString("nome"),
-                        rs.getString("telefone"), rs.getString("email"),
-                        rs.getInt("enderecoId"), rs.getString("curso"),
+                        rs.getString("email"), rs.getString("curso"),
                         rs.getString("periodo"), rs.getString("turno"),
                         rs.getString("matricula"), rs.getString("login"),
                         rs.getString("senha")
                 );
+                aluno.setTelefone(rs.getString("telefone"));
+                aluno.setEnderecoId(rs.getInt("enderecoId"));
                 return aluno;
 
             }
@@ -101,12 +102,13 @@ public class AlunoDAO {
             if (rs.next()) {
                 aluno = new Aluno(
                         rs.getString("cpf"), rs.getString("nome"),
-                        rs.getString("telefone"), rs.getString("email"),
-                        rs.getInt("enderecoId"), rs.getString("curso"),
+                        rs.getString("email"), rs.getString("curso"),
                         rs.getString("periodo"), rs.getString("turno"),
                         rs.getString("matricula"), rs.getString("login"),
                         rs.getString("senha")
                 );
+                aluno.setTelefone(rs.getString("telefone"));
+                aluno.setEnderecoId(rs.getInt("enderecoId"));
                 return aluno;
 
             }

@@ -1,22 +1,22 @@
 package com.pedro.menu;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import com.pedro.config.IO;
 import com.pedro.models.Aluno;
+import com.pedro.models.Professor;
 import com.pedro.service.AlunoService;
 import com.pedro.service.AutenticacaoService;
+import com.pedro.service.ProfessorService;
 
 public class LoginMenu {
-    private IO io = new IO();
-    private Scanner scanner = new Scanner(System.in);
-    
+    private Scanner scanner;
 
+    public LoginMenu(){
+        scanner = new Scanner(System.in);
+    }
 
-    private void Login(){
+    public void login(){
         AutenticacaoService autenticacaoService = new AutenticacaoService();
 
         System.out.println("[!] Login: ");
@@ -25,7 +25,7 @@ public class LoginMenu {
         System.out.println("[!] Senha: ");
         String senha = scanner.nextLine();
         try{
-            String tipoUsuario = autenticacaoService.autenticar(login, senha);
+            String tipoUsuario = autenticacaoService.autenticar(login, senha).toLowerCase().trim();
 
             if(tipoUsuario == null || tipoUsuario.equals("")){
                 System.out.println("[!] Login ou Senha Inválidos.");
@@ -33,7 +33,7 @@ public class LoginMenu {
             }
 
             System.out.println("[!] Bem-Vindo(a), " + login);
-            if(tipoUsuario.toLowerCase().equals("aluno") || tipoUsuario.toLowerCase().equals("professor")){
+            if(tipoUsuario.equals("aluno") || tipoUsuario.equals("professor")){
                 AlunoProfessorMenu alunoProfessorMenu = new AlunoProfessorMenu();
                 alunoProfessorMenu.imprimirMenuAlunoProfessor();
             } else if (tipoUsuario.toLowerCase().equals("funcionario")){
@@ -47,28 +47,31 @@ public class LoginMenu {
         
     }
 
-    private void Cadastro(){
+    public void cadastro(){
         System.out.println("[!] Login: ");
         String login = scanner.nextLine();
 
         System.out.println("[!] Senha: ");
         String senha = scanner.nextLine();
 
+        System.out.println("[!] Nome: ");
+        String nome = scanner.nextLine();
+
+        System.out.println("[!] CPF: ");
+        String cpf = scanner.nextLine();
+
+        System.out.println("[!] Email: ");
+        String email = scanner.nextLine();
+
+        System.out.println("[!] Telefone (opcional, pressione [ENTER] para pular):");
+        String telefone = scanner.nextLine();
+        System.out.println("[!] ENDEREÇO (opcional, pressione [ENTER] para pular):");
+        String endereco = scanner.nextLine();
         System.out.println("[!] Tipo do Usuário (Aluno | Professor): ");
-        String tipo_usuario = scanner.nextLine();
+        String tipoUsuario = scanner.nextLine().toLowerCase().trim();
 
-        if(tipo_usuario.toLowerCase().equals("aluno")){
-            AlunoService alunoService = new AlunoService();
 
-            System.out.println("[!] Nome: ");
-            String nome = scanner.nextLine();
-
-            System.out.println("[!] CPF: ");
-            String cpf = scanner.nextLine();
-
-            System.out.println("[!] Email: ");
-            String email = scanner.nextLine();
-
+        if(tipoUsuario.equals("aluno")){
             System.out.println("[!] Curso");
             String curso = scanner.nextLine();
 
@@ -81,55 +84,52 @@ public class LoginMenu {
             System.out.println("[!] Matrícula: ");
             String matricula = scanner.nextLine();
 
-            System.out.println("INFORMAÇÕES ADICIONAIS: ");
-            System.out.println("CASO NÃO DESEJE INSERIR NENHUMA INFORMAÇÃO, PRESSIONE 'ENTER'");
-            System.out.println("[!] Telefone: ");
-            String telefone = scanner.nextLine();
+            Aluno aluno = new Aluno(cpf, nome, email, curso, periodo, turno, matricula, login, senha);
 
-            System.out.println("[!] ENDEREÇO: ");
-            String endereco = scanner.nextLine();
-
-            if(telefone.equals("") || telefone.isEmpty()){
-                telefone = null;
+            if(!telefone.isEmpty()){
+                aluno.setTelefone(telefone);
             }
 
-            int novo_endereco = 0;
+            if(!endereco.isEmpty()){
+                int enderecoInt = Integer.parseInt(endereco);
+                aluno.setEnderecoId(enderecoInt);
+            }
+
 
             try{
-                alunoService.registrarAluno(new Aluno(cpf, nome, telefone, email, novo_endereco, curso, periodo, turno, matricula, login, senha));
+                AlunoService alunoService = new AlunoService();
+                alunoService.registrarAluno(aluno);
             } catch (Exception e){
                 e.printStackTrace();
             }
+        
+        if(tipoUsuario.equals("professor")){
+            System.out.println("[!] Disciplina: ");
+            String disciplina = scanner.nextLine();
 
+            System.out.println("[!] Credencial: ");
+            String credencial = scanner.nextLine();
+
+            Professor professor = new Professor(cpf, nome, email, disciplina, credencial, login, senha);
+
+            if(!telefone.isEmpty()){
+                professor.setTelefone(telefone);
+            }
+
+            if(!endereco.isEmpty()){
+                int enderecoInt = Integer.parseInt(endereco);
+                professor.setEnderecoId(enderecoInt);
+            }
+
+            try {
+                ProfessorService professorService = new ProfessorService();
+                professorService.registrarProfessor(professor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
             
 
         }
-    }
-
-    public void imprimirMenuPrincipal(){
-        List<String> opcoesMenuPrincipal = new ArrayList<String>(Arrays.asList("1. Login", "2. Cadastrar", "3. Sair"));
-        int opc = io.imprimirMenuRetornandoOpcao(opcoesMenuPrincipal, "INICIO");
-
-        while (opc != 3) {
-            switch (opc) {
-                case 1:
-                    Login();
-                    break;
-                case 2:
-                    Cadastro();
-                    break;
-                case 3:
-                    break;
-                default:
-                    System.out.println("[!] Opção Inválida.");
-            }
-            opc = io.imprimirMenuRetornandoOpcao(opcoesMenuPrincipal, "INICIO");
-        }
-
-    }
-
-    public static void main(String[] args) {
-        LoginMenu menu = new LoginMenu();
-        menu.imprimirMenuPrincipal();
     }
 }

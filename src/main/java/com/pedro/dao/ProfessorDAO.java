@@ -74,11 +74,12 @@ public class ProfessorDAO {
             if (rs.next()) {
                 professor = new Professor(
                         rs.getString("cpf"), rs.getString("nome"),
-                        rs.getString("telefone"), rs.getString("email"),
-                        rs.getInt("enderecoId"), rs.getString("disciplina"),
+                        rs.getString("email"), rs.getString("disciplina"),
                         rs.getString("credencial"), rs.getString("login"),
                         rs.getString("senha")
                 );
+                professor.setTelefone(rs.getString("telefone"));
+                professor.setEnderecoId(rs.getInt("enderecoId"));
                 return professor;
 
             }
@@ -97,11 +98,12 @@ public class ProfessorDAO {
             if (rs.next()) {
                 professor = new Professor(
                         rs.getString("cpf"), rs.getString("nome"),
-                        rs.getString("telefone"), rs.getString("email"),
-                        rs.getInt("enderecoId"), rs.getString("disciplina"),
+                        rs.getString("email"), rs.getString("disciplina"),
                         rs.getString("credencial"), rs.getString("login"),
                         rs.getString("senha")
                 );
+                professor.setTelefone(rs.getString("telefone"));
+                professor.setEnderecoId(rs.getInt("enderecoId"));
                 return professor;
 
             }

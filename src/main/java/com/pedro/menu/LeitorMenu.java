@@ -77,7 +77,7 @@ public class LeitorMenu {
                         String turnoUsuario = scanner.nextLine().trim();
 
                         boolean sucesso = alunoService.registrarAluno(new Aluno(cpfAluno,
-                            nomeUsuario, telefoneUsuario, emailUsuario, 0, cursoUsuario,
+                            nomeUsuario,emailUsuario,cursoUsuario,
                             periodoUsuario, turnoUsuario, matriculaUsuario, loginUsuario, senhaUsuario
                         ));
                         if (!sucesso)
@@ -90,8 +90,8 @@ public class LeitorMenu {
                         String credencialUsuario = scanner.nextLine().trim();
 
                         boolean sucesso = professorService.registrarProfessor(new Professor(
-                            cpfAluno, nomeUsuario, telefoneUsuario, emailUsuario,
-                            0, disciplinaUsuario, credencialUsuario,
+                            cpfAluno, nomeUsuario, emailUsuario,
+                            disciplinaUsuario, credencialUsuario,
                             loginUsuario, senhaUsuario
                         ));
                         if (!sucesso)
