@@ -74,8 +74,21 @@ public class EnderecoService {
         }
 
         enderecoDAO.excluirEndereco(id);
-        System.out.println("[!] Endereço cadastrado com sucesso.");
+        System.out.println("[!] Endereço excluído");
         return true;
+    }
+
+    public Endereco buscarEnderecoPorId(int id){
+        if(id <= 0){
+            System.err.println("[!] ID inválido.");
+            return null;
+        }
+
+        Endereco endereco = enderecoDAO.buscarEndercoPorId(id);
+        if (endereco == null){
+            System.err.println("[!] Endereço não encontrado.");
+        }
+        return endereco;
     }
 
     private static boolean isNullOrEmpty(String str){
@@ -109,5 +122,6 @@ public class EnderecoService {
         }
         return true;
     }
+
 
 }

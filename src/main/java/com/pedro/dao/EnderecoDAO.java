@@ -84,7 +84,7 @@ public class EnderecoDAO {
             }
 
             if (campos.isEmpty()) {
-                return false; // Nenhum campo válido para atualização
+                return false;
             }
 
             query += String.join(", ", campos) + " WHERE id = ?";
@@ -126,6 +126,35 @@ public class EnderecoDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Endereco buscarEndercoPorId(int id){
+        try {
+            ps = conexao.getConn().prepareStatement(
+                "SELECT * FROM endereco WHERE id = ?"
+            );
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                Endereco endereco = new Endereco(
+                    rs.getString("rua"),
+                    rs.getString("bairro"),
+                    rs.getString("numero"),
+                    rs.getString("cidade"),
+                    rs.getString("estado")
+                );
+                endereco.setId(id);
+                if(validarString(rs.getString("cep"))){
+                    endereco.setCep(rs.getString("cep"));
+                }
+                return endereco;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
