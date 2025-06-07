@@ -16,14 +16,10 @@ public class EditoraService {
         editoraDao = new EditoraDAO();
     }
 
-    private static boolean isNullOrEmpty(String str){
-        return str == null || str.isEmpty();
-    }
-
     public List<Editora> listar(){
         List<Editora> editoraList = null;
         try {
-            ResultSet editoras = editoraDao.listar();
+            ResultSet editoras = editoraDao.listarEditoras();
             editoraList = new ArrayList<Editora>();
             while (editoras.next()) {
                 Editora editora = new Editora();
@@ -37,56 +33,60 @@ public class EditoraService {
             e.printStackTrace();
         }
 
-        return null;
+        return editoraList;
     }
 
-    public boolean inserir(Editora editora){
+    public boolean cadastrarEditora(Editora editora){
+        boolean valido = validarEditora(editora);
+        if(!valido){
+            System.err.println("[!] Não foi possível cadastrar essa editora");
+            return false;
+        }
+        editoraDao.cadastrarEditora(editora);
+        System.out.println("[!] Editora cadastrado com sucesso.");
+        return true;
+    }
+
+    public boolean excluirEditora(int id){
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+            return false;
+        }
+
+        editoraDao.excluirEditora(id);
+        System.out.println("[!] Editora excluída");
+        return true;
+    }
+
+    public boolean editarEditora(int id, Editora editora){
+
+        if(editora == null){
+            System.err.println("[!] Editora Inválida");
+            return false;
+        }
+
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+            return false;
+        }
+
+        editoraDao.editarEditora(id, editora);
+        System.out.println("[!] Editora editada com sucesso");
+        return true;
+    }
+
+    private static boolean isNullOrEmpty(String str){
+        return str == null || str.isEmpty();
+    }
+
+    private static boolean validarEditora(Editora editora){
         if(isNullOrEmpty(editora.getNome())){
-            System.out.println("[!] O nome da Editora é obrigatório");
+            System.err.println("[!] O nome da editora é obrigatório");
             return false;
         }
 
         if(isNullOrEmpty(editora.getCnpj())){
-            System.out.println("[!] O cnpj da Editora é obrigatório");
-            return false;
-        }
-
-        boolean succ = editoraDao.inserir(editora);
-        if (!succ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean excluir(int id){
-        if(id == 0){
-            return false;
-        }
-
-        boolean succ = editoraDao.excluir(id);
-        if (!succ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean editar(int id, Editora editora){
-
-        if(isNullOrEmpty(editora.getNome())){
-            System.out.println("[!] O nome da Editora é obrigatório");
-            return false;
-        }
-
-        if(isNullOrEmpty(editora.getCnpj())){
-            System.out.println("[!] O cnpj da Editora é obrigatório");
-            return false;
-        }
-
-        boolean succ = editoraDao.editar(id, editora);
-        if (!succ) {
-            return false;
+            System.err.println("[!] O CNPJ da editora é obrigatório");
         }
 
         return true;

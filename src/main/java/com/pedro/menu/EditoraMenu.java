@@ -1,126 +1,104 @@
 package com.pedro.menu;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 
+import com.pedro.config.IO;
 import com.pedro.models.Editora;
 import com.pedro.models.Endereco;
 import com.pedro.service.EditoraService;
 
 public class EditoraMenu {
 
-    private Scanner scanner = new Scanner(System.in);
-    private EditoraService editoraService = new EditoraService();
+    private Scanner scanner;
+    private EditoraService editoraService;
+    private EnderecoMenu enderecoMenu;
+    private IO io;
 
-    public void cadastrarEditora() {
-        System.out.println("Digite o nome da Editora: ");
-        String nomeEditora = scanner.nextLine();
-
-        System.out.println("Digite o CNPJ da Editora: ");
-        String cnpjEditora = scanner.nextLine();
-
-        System.out.println("Deseja inserir o endereço da editora (S/N)? ");
-        String resposta = scanner.nextLine().toLowerCase().trim();
-
-        Endereco endereco = null;
-        if (resposta.equals("s")) {
-            System.out.println("RUA: ");
-            String rua = scanner.nextLine();
-
-            System.out.println("BAIRRO: ");
-            String bairro = scanner.nextLine();
-
-            System.out.println("NÚMERO: ");
-            int numero = scanner.nextInt();
-
-            System.out.println("CEP: ");
-            String cep = scanner.nextLine();
-
-            System.out.println("CIDADE: ");
-            String cidade = scanner.nextLine();
-
-            System.out.println("ESTADO: ");
-            String estado = scanner.nextLine();
-
-            endereco = new Endereco(rua, bairro, numero, cep, cidade, estado);
-        }
-
-        editoraService.inserir(new Editora(nomeEditora, cnpjEditora));
-        return;
+    public EditoraMenu() {
+        scanner = new Scanner(System.in);
+        editoraService = new EditoraService();
+        enderecoMenu = new EnderecoMenu();
+        io = new IO();
     }
 
-    public void listarEditora() {
+    public void imprimirMenu() {
+        List<String> opcoesEditora = new ArrayList<>(Arrays.asList(
+                "1. Cadastrar editora",
+                "2. Consultar editoras",
+                "3. Editar editora",
+                "4. Excluir editora",
+                "5. Voltar"));
+        int opc = io.imprimirMenuRetornandoOpcao(opcoesEditora, "MENU EDITORA");
+        while (opc != 5) {
+            switch (opc) {
+                case 1:
+                    cadastrarEditora();
+                    break;
+                case 2:
+                    listarEditoras();
+                    break;
+                case 3:
+                    editarEditora();
+                    break;
+                case 4:
+                    excluirEditora();
+                    break;
+
+                default:
+                    System.err.println("[!] Opção Inválida.");
+            }
+            opc = io.imprimirMenuRetornandoOpcao(opcoesEditora, "MENU EDITORA");
+        }
+    }
+
+    private void cadastrarEditora() {
+        System.out.println("[!] Nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("[!] CNPJ: ");
+        String cnpj = scanner.nextLine();
+        Endereco endereco = enderecoMenu.selecionarOuCadastrarEndereco();
+        Editora editora = new Editora(nome.isEmpty() ? null : nome, cnpj.isEmpty() ? null : cnpj);
+        editora.setEnderecoMatrizId(endereco == null ? 0 : endereco.getId());
+        editoraService.cadastrarEditora(editora);
+    }
+
+    public void listarEditoras() {
         List<Editora> editoras = editoraService.listar();
         System.out.println("Editoras");
         System.out.println("ID | Nome | CNPJ ");
         if (!editoras.isEmpty()) {
-            for(Editora editora : editoras){
+            for (Editora editora : editoras) {
                 int max = editora.getNome().length() < 11 ? editora.getNome().length() : 12;
-                System.out.println("[" + editora.getId() + "] " + editora.getNome().substring(0, max) + " - " + editora.getCnpj());
+                System.out.println(
+                        "[" + editora.getId() + "] " + editora.getNome().substring(0, max) + " - " + editora.getCnpj());
             }
         }
     }
 
-    public void editarEditora(){
-        try{
-            listarEditora();
-
-            System.out.println();
-
-            System.out.println("Escolha o id da editora: ");
-            int id_editora = scanner.nextInt();
-            scanner.nextLine();
-            
-            System.out.println("Digite o nome da Editora: ");
-            String nomeEditora = scanner.nextLine();
-
-            System.out.println("Digite o CNPJ da Editora: ");
-            String cnpjEditora = scanner.nextLine();
-
-            System.out.println("Deseja inserir o endereço da editora (S/N)? ");
-            String resposta = scanner.nextLine().toLowerCase().trim();
-        
-        
-            Endereco endereco = null;
-            if(resposta.equals("s")){
-                System.out.println("RUA: ");
-                String rua = scanner.nextLine();
-
-                System.out.println("BAIRRO: ");
-                String bairro = scanner.nextLine();
-
-                System.out.println("NÚMERO: ");
-                int numero = scanner.nextInt();
-
-                System.out.println("CEP: ");
-                String cep = scanner.nextLine();
-
-                System.out.println("CIDADE: ");
-                String cidade = scanner.nextLine();
-
-                System.out.println("ESTADO: ");
-                String estado = scanner.nextLine();
-
-                endereco = new Endereco(rua, bairro, numero, cep, cidade, estado);
-            }
-
-            editoraService.editar(id_editora, new Editora(nomeEditora, cnpjEditora));
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void excluirEditora(){
-        listarEditora();
-
-        System.out.println("Escolha o id da editora: ");
-        int id_editora = scanner.nextInt();
+    private void editarEditora() {
+        listarEditoras();
+        System.out.println("[!] ID da Editora: ");
+        int id = scanner.nextInt();
         scanner.nextLine();
-        
-        editoraService.excluir(id_editora);
+        System.out.println("[!] Nome (pressione [ENTER] para manter atual): ");
+        String nome = scanner.nextLine();
+        System.out.println("[!] CNPJ (pressione [ENTER] para manter atual): ");
+        String cnpj = scanner.nextLine();
+        Endereco endereco = enderecoMenu.selecionarOuCadastrarEndereco();
+        Editora editora = new Editora(nome.isEmpty() ? null : nome, cnpj.isEmpty() ? null : cnpj);
+        editora.setEnderecoMatrizId(endereco == null ? 0 : endereco.getId());
+        editoraService.editarEditora(id, editora);
+    }
+
+    private void excluirEditora() {
+        listarEditoras();
+        System.out.println("[!] ID da Editora: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        editoraService.excluirEditora(id);
     }
 
 }
