@@ -10,15 +10,13 @@ public class Professor extends Pessoa{
     }
 
     public Professor(
-            String cpf, String nome, String telefone, String email,
-            int endereco, String disciplina, String credencial,
+            String cpf, String nome, String email,
+             String disciplina, String credencial,
             String login, String senha
     ) {
         this.cpf = cpf;
         this.nome = nome;
-        this.telefone = telefone;
         this.email = email;
-        this.enderecoId = endereco;
         this.disciplina = disciplina;
         this.credencial = credencial;
         this.login = login;
