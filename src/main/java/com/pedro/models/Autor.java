@@ -11,10 +11,8 @@ public class Autor {
 
     public Autor(){}
 
-    public Autor(String nome, Date dataNascimento, String pseudonimo) {
+    public Autor(String nome) {
         this.nome = nome;
-        this.dataNascimento = dataNascimento;
-        this.pseudonimo = pseudonimo;
     }
 
     public int getId() {

@@ -37,71 +37,52 @@ public class AutorService {
     }
 
 
-    public boolean inserir(Autor autor) {
-
-        if (isNullOrEmpty(autor.getNome())) {
-            System.err.println("[!] Nome do autor é obrigatório.");
+    public boolean cadastrarAutor(Autor autor) {
+        boolean valido = validarAutor(autor);
+        if(!valido){
+            System.err.println("[!] Não foi possível cadastrar essa editora");
             return false;
         }
-
-        if (isNullOrEmpty(autor.getPseudonimo())) {
-            System.err.println("[!] Pseudônimo do autor é obrigatório.");
-            return false;
-        }
-
-        if (autor.getDataNascimento() == null) {
-            System.err.println("[!] Data de nascimento do autor é obrigatória.");
-            return false;
-        }
-
-
-        boolean succ = autorDao.inserir(autor);
-        if (!succ) {
-            return false;
-        }
-
+        autorDao.cadastrarAutor(autor);
+        System.out.println("[!] Autor cadastrado com sucesso.");
         return true;
-
     }
 
 
     public boolean excluir(int id){
-        if (id == 0){
+        if(id <= 0){
+            System.err.println("Id Inválido");
             return false;
         }
 
-        boolean succ = autorDao.excluir(id);
-        if (!succ) {
-            return false;
-        }
-
+        autorDao.excluirAutor(id);
+        System.out.println("[!] Autor excluído.");
         return true;
+    }
 
+    public boolean editar(int id, Autor autor){
+        if(autor == null){
+            System.err.println("Autor Inválido");
+            return false;
+        }
+
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+            return false;
+        }
+
+        autorDao.editarAutor(id, autor);
+        System.out.println("[!] Autor editado com sucesso.");
+        return true;
     }
 
     private static boolean isNullOrEmpty(String str){
         return str == null || str.isEmpty();
     }
 
-    public boolean editar(int id, Autor autor){
-        
-        if (isNullOrEmpty(autor.getNome())) {
-            System.err.println("[!] Nome do autor é obrigatório.");
-            return false;
-        }
-
-        if (isNullOrEmpty(autor.getPseudonimo())) {
-            System.err.println("[!] Pseudônimo do autor é obrigatório.");
-            return false;
-        }
-
-        if (autor.getDataNascimento() == null) {
-            System.err.println("[!] Data de nascimento do autor é obrigatória.");
-            return false;
-        }
-
-        boolean succ = autorDao.editar(id, autor);
-        if(!succ){
+    private static boolean validarAutor(Autor autor){
+        if(isNullOrEmpty(autor.getNome())){
+            System.err.println("[!] O nome do autor é obrigatório");
             return false;
         }
 

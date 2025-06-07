@@ -1,80 +1,122 @@
 package com.pedro.menu;
 
 import java.sql.Date;
-import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import com.pedro.config.IO;
 import com.pedro.models.Autor;
 import com.pedro.service.AutorService;
 import com.pedro.utils.DataUtils;
 
 public class AutorMenu {
-    private Scanner scanner = new Scanner(System.in);
-    private AutorService autorService = new AutorService();
+    private Scanner scanner;
+    private AutorService autorService;
+    private IO io;
 
-    public void inserirAutor(){
-        System.out.println("Digite o nome do autor: ");
-        String nome = scanner.nextLine();
-
-        System.out.println("Digite a data de nascimento do autor: ");
-        Date dataNascimento = DataUtils.stringToSqlDate(scanner.nextLine());
-
-        System.out.println("Digite o pseudonimo do Autor");
-        String pseudonimo = scanner.nextLine();
-
-        autorService.inserir(new Autor(nome, dataNascimento, pseudonimo));
-
+    public AutorMenu() {
+        scanner = new Scanner(System.in);
+        autorService = new AutorService();
+        io = new IO();
     }
 
-    public void listarAutores(){
+    public void imprimirMenu() {
+        List<String> opcoesAutor = new ArrayList<String>(Arrays.asList(
+                "1. Cadastrar autor",
+                "2. Consultar autores",
+                "3. Editar autor",
+                "4. Excluir autor",
+                "5. Voltar"));
+        int opc = io.imprimirMenuRetornandoOpcao(opcoesAutor, "MENU AUTORES");
+        while (opc != 5) {
+            switch (opc) {
+                case 1:
+                    cadastrarAutor();
+                    break;
+                case 2:
+                    listarAutores();
+                    break;
+                case 3:
+                    editarAutor();
+                    break;
+                case 4:
+                    excluirAutor();
+                    break;
+                default:
+                    System.err.println("[!] Opção Inválida.");
+            }
+            opc = io.imprimirMenuRetornandoOpcao(opcoesAutor, "MENU AUTORES");
+        }
+    }
+
+    public void cadastrarAutor() {
+        System.out.println("[!] Nome: ");
+        String nome = scanner.nextLine();
+
+        System.out.println("[!] Data Nascimento (opcional, pressione [ENTER] para pular): ");
+        String dataNascimento = scanner.nextLine();
+
+        System.out.println("[!] Peseudônimo (opcional, pressione [ENTER] para pular): ");
+        String pseudonimo = scanner.nextLine();
+
+        Autor autor = new Autor(nome);
+
+        if (!dataNascimento.isEmpty()) {
+            Date dataNascimentoDate = DataUtils.stringToSqlDate(dataNascimento);
+            autor.setDataNascimento(dataNascimentoDate);
+        }
+
+        if (!pseudonimo.isEmpty()) {
+            autor.setPseudonimo(pseudonimo);
+        }
+
+        autorService.cadastrarAutor(autor);
+    }
+
+    public void listarAutores() {
         List<Autor> autores = autorService.listar();
         System.out.println("Autores");
         System.out.println("ID | Nome | Data Nascimento | Pseudônimo");
-        if(!autores.isEmpty()){
-            for(Autor autor : autores){
+        if (!autores.isEmpty()) {
+            for (Autor autor : autores) {
                 int max = autor.getNome().length() < 11 ? autor.getNome().length() : 12;
-                System.out.println("[" + autor.getId() + "] " + autor.getNome().substring(0, max) + " - " + autor.getDataNascimento() + " - " + autor.getPseudonimo());
+                System.out.println("[" + autor.getId() + "] " + autor.getNome().substring(0, max) + " - "
+                        + autor.getDataNascimento() + " - " + autor.getPseudonimo());
             }
         }
     }
 
-    public void editarAutor(){
-        try{
-            listarAutores();
-            System.out.println();
+    public void editarAutor() {
+        listarAutores();
+        System.out.println("\n[!] ID do Autor: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("[!] Nome (pressione [ENTER] para manter atual):: ");
+        String nome = scanner.nextLine();
+        System.out.println("[!] Data de Nascimento (pressione [ENTER] para manter atual):: ");
+        String dataNascimento = scanner.nextLine();
+        System.out.println("[!] Pseudônimo (pressione [ENTER] para manter atual):: ");
+        String pseudonimo = scanner.nextLine();
 
-            System.out.println("[!] Escolha o id do Autor: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.println("[!] Digite o nome do autor: ");
-            String nome = scanner.nextLine();
-
-            System.out.println("[!] Digite a data de nascimento do autor: ");
-            Date dataNascimento = DataUtils.stringToSqlDate(scanner.nextLine());
-
-            System.out.println("[!] Digite o pseudonimo do Autor");
-            String pseudonimo = scanner.nextLine();
-
-            autorService.editar(id, new Autor(nome, dataNascimento, pseudonimo));
-        
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        Autor autor = new Autor(nome.isEmpty() ? null : nome);
+        autor.setDataNascimento(dataNascimento.isEmpty() ? null
+                : DataUtils.stringToSqlDate(
+                        dataNascimento));
+        autor.setPseudonimo(pseudonimo.isEmpty() ? null : pseudonimo);
+        autorService.editar(id, autor);
     }
 
-    public void excluirAutor(){
-        try{
+    public void excluirAutor() {
+        try {
             listarAutores();
             System.out.println();
-
-            System.out.println("[!] Escolha o id do Autor: ");
+            System.out.println("[!] ID do autor: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-
             autorService.excluir(id);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
