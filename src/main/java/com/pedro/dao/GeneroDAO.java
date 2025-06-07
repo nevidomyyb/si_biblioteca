@@ -3,6 +3,8 @@ package com.pedro.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pedro.config.Conexao;
 import com.pedro.models.Genero;
@@ -25,7 +27,7 @@ public class GeneroDAO {
         return null;
     }
 
-    public boolean inserir(Genero genero){
+    public boolean cadastrarGenero(Genero genero){
         try{
             ps = conexao.getConn().prepareStatement(
                 "INSERT INTO genero(genero) VALUES (?)"
@@ -34,16 +36,14 @@ public class GeneroDAO {
             ps.setString(1, genero.getGenero());
             ps.executeUpdate();
             ps.close();
-            System.out.println("[!] Gênero inserido com sucesso!");
             return true;
         } catch(SQLException e){
-            System.out.println("[!] Falha ao inserir gênero!");
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean excluir(int id){
+    public boolean excluirGenero(int id){
         try{
             ps = conexao.getConn().prepareStatement(
                 "DELETE FROM genero WHERE id = ?"
@@ -52,33 +52,49 @@ public class GeneroDAO {
             ps.setInt(1, id);
             ps.executeUpdate();
             ps.close();
-            System.out.println("[!] Genero excluído com sucesso");
             return true;
         } catch(SQLException e){
-            System.out.println("[!] Falha ao excluir gênero");
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean editar(int id, Genero genero){
-        try{
-            ps = conexao.getConn().prepareStatement(
-                "UPDATE genero SET genero = ? WHERE id = ?"
-            );
+    public boolean editarGenero(int id, Genero genero){
+        try {
+            String query = "UPDATE genero SET ";
+            List<String> campos = new ArrayList<String>();
+            List<Object> valores = new ArrayList<Object>();
 
-            ps.setString(1, genero.getGenero());
-            ps.setInt(2, id);
+            if(validarString(genero.getGenero())){
+                campos.add("genero = ?");
+                valores.add(genero.getGenero());
+            }
 
+            if(campos.isEmpty()){
+                return false;
+            }
+
+            query += String.join(", ", campos) + "WHERE id = ?";
+            ps = conexao.getConn().prepareStatement(query);
+            int index = 1;
+            for(Object valor : valores){
+                ps.setObject(index++, valor);
+            }
+            ps.setInt(index, id);
             ps.executeUpdate();
             ps.close();
-            System.out.println("[!] Gênero atualizado com sucesso!");
             return true;
-        } catch(SQLException e){
-            System.out.println("[!] Falha ao atualizar gênero");
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean validarString(String str){
+        if(str != null && !str.isEmpty()){
+            return true;
+        }
+        return false;
     }
 
 }

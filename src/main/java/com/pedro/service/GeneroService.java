@@ -29,7 +29,6 @@ public class GeneroService {
                 Genero genero = new Genero();
                 genero.setId(generos.getInt("id"));
                 genero.setGenero(generos.getString("genero"));
-
                 generoList.add(genero);
             }
             return generoList;
@@ -40,45 +39,48 @@ public class GeneroService {
         return generoList;
     }
 
-    public boolean inserir(Genero genero){
-
-        if(isNullOrEmpty(genero.getGenero())){
-            System.out.println("[!] O gênero é obrigatório");
+    public boolean cadastrarGenero(Genero genero){
+        boolean valido = validarGenero(genero);
+        if(!valido){
+            System.err.println("[!] Não foi possível cadastrar esse gênero");
             return false;
         }
-
-        boolean succ = generoDao.inserir(genero);
-        if (!succ) {
-            return false;
-        }
-
+        generoDao.cadastrarGenero(genero);
+        System.out.println("[!] Gênero cadastrado com sucesso.");
         return true;
     }
 
-    public boolean excluir(int id){
-        if(id == 0){
+    public boolean excluirGenero(int id){
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
             return false;
         }
-
-        boolean succ = generoDao.excluir(id);
-        if (!succ) {
-            return false;
-        }
-
+        generoDao.excluirGenero(id);
+        System.out.println("[!] Gênero excluído");
         return true;
     }
 
-    public boolean editar(int id, Genero genero) {
+    public boolean editarGenero(int id, Genero genero) {
+        if(genero == null){
+            System.err.println("[!] Gênero Inválido");
+            return false;
+        }
+
+        if(id <= 0){
+            System.err.println("ID Inválido");
+            return false;
+        }
+
+        generoDao.editarGenero(id, genero);
+        System.out.println("[!] Gênero editado com sucesso");
+        return true;
+    }
+    
+    private static boolean validarGenero(Genero genero){
         if(isNullOrEmpty(genero.getGenero())){
-            System.out.println("[!] O gênero é obrigatório");
+            System.err.println("[!] A descrição do gênero é obrigatória");
             return false;
         }
-
-        boolean succ = generoDao.editar(id, genero);
-        if (!succ) {
-            return false;
-        }
-
         return true;
     }
 
