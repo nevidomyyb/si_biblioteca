@@ -12,11 +12,11 @@ import com.pedro.service.ProfessorService;
 public class LoginMenu {
     private Scanner scanner;
 
-    public LoginMenu(){
+    public LoginMenu() {
         scanner = new Scanner(System.in);
     }
 
-    public void login(){
+    public void login() {
         AutenticacaoService autenticacaoService = new AutenticacaoService();
 
         System.out.println("[!] Login: ");
@@ -24,36 +24,30 @@ public class LoginMenu {
 
         System.out.println("[!] Senha: ");
         String senha = scanner.nextLine();
-        try{
+        try {
             String tipoUsuario = autenticacaoService.autenticar(login, senha).toLowerCase().trim();
 
-            if(tipoUsuario == null || tipoUsuario.equals("")){
+            if (tipoUsuario == null || tipoUsuario.equals("")) {
                 System.out.println("[!] Login ou Senha Inválidos.");
                 return;
             }
 
             System.out.println("[!] Bem-Vindo(a), " + login);
-            if(tipoUsuario.equals("aluno") || tipoUsuario.equals("professor")){
+            if (tipoUsuario.equals("aluno") || tipoUsuario.equals("professor")) {
                 AlunoProfessorMenu alunoProfessorMenu = new AlunoProfessorMenu();
                 alunoProfessorMenu.imprimirMenuAlunoProfessor();
-            } else if (tipoUsuario.toLowerCase().equals("funcionario")){
+            } else if (tipoUsuario.toLowerCase().equals("funcionario")) {
                 PrincipalMenu principalMenu = new PrincipalMenu();
                 principalMenu.imprimirMenuPrincipal();
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
-    public void cadastro(){
-        System.out.println("[!] Login: ");
-        String login = scanner.nextLine();
-
-        System.out.println("[!] Senha: ");
-        String senha = scanner.nextLine();
-
+    public void cadastro() {
         System.out.println("[!] Nome: ");
         String nome = scanner.nextLine();
 
@@ -67,11 +61,20 @@ public class LoginMenu {
         String telefone = scanner.nextLine();
         System.out.println("[!] ENDEREÇO (opcional, pressione [ENTER] para pular):");
         String endereco = scanner.nextLine();
-        System.out.println("[!] Tipo do Usuário (Aluno | Professor): ");
-        String tipoUsuario = scanner.nextLine().toLowerCase().trim();
 
+        System.out.println("[!] Login: ");
+        String login = scanner.nextLine();
 
-        if(tipoUsuario.equals("aluno")){
+        System.out.println("[!] Senha: ");
+        String senha = scanner.nextLine();
+
+        System.out.println("[!] Tipo do Usuário: ");
+        System.out.println("[1] Aluno");
+        System.out.println("[2] Professor");
+        String tipoUsuario = scanner.nextLine().trim();
+        int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
+
+        if (tipoUsuarioInt == 1) {
             System.out.println("[!] Curso");
             String curso = scanner.nextLine();
 
@@ -86,24 +89,24 @@ public class LoginMenu {
 
             Aluno aluno = new Aluno(cpf, nome, email, curso, periodo, turno, matricula, login, senha);
 
-            if(!telefone.isEmpty()){
+            if (!telefone.isEmpty()) {
                 aluno.setTelefone(telefone);
             }
 
-            if(!endereco.isEmpty()){
+            if (!endereco.isEmpty()) {
                 int enderecoInt = Integer.parseInt(endereco);
                 aluno.setEnderecoId(enderecoInt);
             }
 
-
-            try{
+            try {
                 AlunoService alunoService = new AlunoService();
                 alunoService.registrarAluno(aluno);
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        
-        if(tipoUsuario.equals("professor")){
+        }
+
+        if (tipoUsuarioInt == 2) {
             System.out.println("[!] Disciplina: ");
             String disciplina = scanner.nextLine();
 
@@ -112,11 +115,11 @@ public class LoginMenu {
 
             Professor professor = new Professor(cpf, nome, email, disciplina, credencial, login, senha);
 
-            if(!telefone.isEmpty()){
+            if (!telefone.isEmpty()) {
                 professor.setTelefone(telefone);
             }
 
-            if(!endereco.isEmpty()){
+            if (!endereco.isEmpty()) {
                 int enderecoInt = Integer.parseInt(endereco);
                 professor.setEnderecoId(enderecoInt);
             }
@@ -127,9 +130,6 @@ public class LoginMenu {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-            
-
         }
     }
 }

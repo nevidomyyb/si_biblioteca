@@ -27,6 +27,7 @@ public class Main {
                     break;
                 case 2:
                     loginMenu.cadastro();
+                    break;
                 default:
                     System.err.println("[!] Opção Inválida.");
             }
