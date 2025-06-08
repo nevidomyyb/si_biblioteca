@@ -3,6 +3,7 @@ package com.pedro.menu;
 import com.pedro.config.IO;
 import com.pedro.models.Endereco;
 import com.pedro.service.EnderecoService;
+import com.pedro.utils.ColunaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,17 +51,17 @@ public class EnderecoMenu {
     }
 
     public Endereco cadastrarEndereco() {
-        System.out.println("[!] RUA: ");
+        System.out.print("[!] RUA: ");
         String rua = scanner.nextLine();
-        System.out.println("[!] BAIRRO: ");
+        System.out.print("[!] BAIRRO: ");
         String bairro = scanner.nextLine();
-        System.out.println("[!] NÚMERO: ");
+        System.out.print("[!] NÚMERO: ");
         String numero = scanner.nextLine();
-        System.out.println("[!] CIDADE: ");
+        System.out.print("[!] CIDADE: ");
         String cidade = scanner.nextLine();
-        System.out.println("[!] ESTADO: ");
+        System.out.print("[!] ESTADO: ");
         String estado = scanner.nextLine();
-        System.out.println("[!] CEP (opcional, pressione [ENTER] para pular): ");
+        System.out.print("[!] CEP (opcional, pressione [ENTER] para pular): ");
         String cep = scanner.nextLine();
 
         Endereco endereco = new Endereco(rua, bairro, numero, cidade, estado);
@@ -72,19 +73,28 @@ public class EnderecoMenu {
 
     private void listarEnderecos() {
         List<Endereco> enderecos = enderecoService.listarEnderecos();
-        System.out.println("ENDEREÇOS");
-        System.out.println("ID | RUA | BAIRRO | NÚMERO | CEP | CIDADE | ESTADO");
+        System.out.println("--------------------------------------------ENDEREÇOS---------------------------------------");
+        System.out.println(
+            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
+            " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | " + ColunaUtils.formatarColuna("NÚMERO", 6) + 
+            " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12) +
+            " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |"
+        );
+        System.out.println("--------------------------------------------------------------------------------------------");
         if (!enderecos.isEmpty()) {
             for (Endereco endereco : enderecos) {
-                int max = endereco.getRua().length() < 11 ? endereco.getRua().length() : 12;
                 System.out.println(
-                    "[" + endereco.getId() + "] " + endereco.getRua().substring(0, max) + " - " +
-                    endereco.getBairro() + " - " + endereco.getNumero() + " - " +
-                    endereco.getCep() + " - " + endereco.getCidade() + " - " +
-                    endereco.getEstado()
+                    "| " + ColunaUtils.formatarColuna(String.valueOf(endereco.getId()), 6) + " | " +
+                    ColunaUtils.formatarColuna(endereco.getRua(), 12) + 
+                    " | " + ColunaUtils.formatarColuna(endereco.getBairro(), 12) +
+                    " | " + ColunaUtils.formatarColuna(endereco.getNumero(), 6) + 
+                    " | " + ColunaUtils.formatarColuna(endereco.getCep(), 10) +
+                    ColunaUtils.formatarColuna(endereco.getCidade(), 12) + 
+                    " | " + ColunaUtils.formatarColuna(endereco.getEstado(),12) + " |"
                 );
             }
         }
+        System.out.println("--------------------------------------------------------------------------------------------");
 
     }
 

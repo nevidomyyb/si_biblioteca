@@ -7,17 +7,18 @@ import java.util.List;
 import com.pedro.config.IO;
 
 public class PrincipalMenu {
-    
+
     private IO io = new IO();
 
-    public void imprimirMenuPrincipal(){
-        List<String> opcoesMenuPrincipal = new ArrayList<String>(Arrays.asList("1. Área livros", "2. Área Leitores", "3. Área Operações", "4. Área Funcionários", "5. Área Gerencial", "6. Sair"));
+    public void imprimirMenuPrincipal() {
+        List<String> opcoesMenuPrincipal = new ArrayList<String>(Arrays.asList("1. Área livros", "2. Área Leitores",
+                "3. Área Operações", "4. Área Funcionários", "5. Área Gerencial", "6. Sair"));
         int opc = io.imprimirMenuRetornandoOpcao(opcoesMenuPrincipal, "MENU PRINCIPAL");
 
         while (opc != 6) {
             switch (opc) {
                 case 1:
-                    System.out.println("MENU AINDA NÃO FOI FEITO");
+                    System.out.println("O MENU DE LIVRO AINDA NÃO FOI FEITO");
                     break;
                 case 2:
                     LeitorMenu leitorMenu = new LeitorMenu();
@@ -27,7 +28,8 @@ public class PrincipalMenu {
                     OperacaoMenu operacaoMenu = new OperacaoMenu();
                     operacaoMenu.imprimirMenuOperacao();
                 case 4:
-                    System.out.println("AINDA NAO FOI FEITO");
+                    FuncionarioMenu funcionarioMenu = new FuncionarioMenu();
+                    funcionarioMenu.exibirMenu();
                 case 5:
                     GerencialMenu gerencialMenu = new GerencialMenu();
                     gerencialMenu.imprimirMenuGerencial();

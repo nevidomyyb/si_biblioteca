@@ -50,16 +50,16 @@ public class LoginMenu {
     public void cadastro() {
         EnderecoMenu enderecoMenu = new EnderecoMenu();
 
-        System.out.println("[!] Nome: ");
-        String nome = scanner.nextLine();
+        System.out.print("[!] Nome: ");
+        String nome = scanner.nextLine().trim();
 
-        System.out.println("[!] CPF: ");
+        System.out.print("[!] CPF: ");
         String cpf = scanner.nextLine().trim();
 
-        System.out.println("[!] Email: ");
+        System.out.print("[!] Email: ");
         String email = scanner.nextLine().trim();
 
-        System.out.println("[!] Telefone (opcional, pressione [ENTER] para pular):");
+        System.out.print("[!] Telefone (opcional, pressione [ENTER] para pular): ");
         String telefone = scanner.nextLine().trim();
         System.out.println("ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();

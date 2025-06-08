@@ -9,6 +9,7 @@ import java.util.Scanner;
 import com.pedro.config.IO;
 import com.pedro.models.Autor;
 import com.pedro.service.AutorService;
+import com.pedro.utils.ColunaUtils;
 import com.pedro.utils.DataUtils;
 
 public class AutorMenu {
@@ -77,27 +78,33 @@ public class AutorMenu {
 
     public void listarAutores() {
         List<Autor> autores = autorService.listar();
-        System.out.println("Autores");
-        System.out.println("ID | Nome | Data Nascimento | Pseudônimo");
+        System.out.println("---------------------------AUTORES--------------------------");
+        System.out.println(
+            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12) + 
+            " | " + ColunaUtils.formatarColuna("Data de Nascimento", 20) + " | " + ColunaUtils.formatarColuna("Pseudônimo", 12) + " |"
+        );
+        System.out.println("------------------------------------------------------------");
         if (!autores.isEmpty()) {
             for (Autor autor : autores) {
-                int max = autor.getNome().length() < 11 ? autor.getNome().length() : 12;
-                System.out.println("[" + autor.getId() + "] " + autor.getNome().substring(0, max) + " - "
-                        + autor.getDataNascimento() + " - " + autor.getPseudonimo());
+                System.out.println(
+                    "| " + ColunaUtils.formatarColuna(String.valueOf(autor.getId()), 6) + " | " + ColunaUtils.formatarColuna(autor.getNome(), 12) +
+                    " | " + ColunaUtils.formatarColuna(autor.getDataNascimento() == null ? null : autor.getDataNascimento().toString(), 20) + " | " + ColunaUtils.formatarColuna(autor.getPseudonimo(), 12) + " |"
+                );
             }
         }
+        System.out.println("------------------------------------------------------------");
     }
 
     public void editarAutor() {
         listarAutores();
-        System.out.println("\n[!] ID do Autor: ");
+        System.out.println("[!] ID do Autor: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("[!] Nome (pressione [ENTER] para manter atual):: ");
+        System.out.println("[!] Nome (pressione [ENTER] para manter atual): ");
         String nome = scanner.nextLine();
-        System.out.println("[!] Data de Nascimento (pressione [ENTER] para manter atual):: ");
+        System.out.println("[!] Data de Nascimento (pressione [ENTER] para manter atual): ");
         String dataNascimento = scanner.nextLine();
-        System.out.println("[!] Pseudônimo (pressione [ENTER] para manter atual):: ");
+        System.out.println("[!] Pseudônimo (pressione [ENTER] para manter atual): ");
         String pseudonimo = scanner.nextLine();
 
         Autor autor = new Autor(nome.isEmpty() ? null : nome);

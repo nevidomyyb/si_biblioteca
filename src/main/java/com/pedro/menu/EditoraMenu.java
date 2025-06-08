@@ -9,6 +9,7 @@ import com.pedro.config.IO;
 import com.pedro.models.Editora;
 import com.pedro.models.Endereco;
 import com.pedro.service.EditoraService;
+import com.pedro.utils.ColunaUtils;
 
 public class EditoraMenu {
 
@@ -67,15 +68,22 @@ public class EditoraMenu {
 
     public void listarEditoras() {
         List<Editora> editoras = editoraService.listar();
-        System.out.println("Editoras");
-        System.out.println("ID | Nome | CNPJ ");
+        System.out.println("--------------------EDITORAS------------------");
+        System.out.println(
+            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 14) + 
+            " | " + ColunaUtils.formatarColuna("CNPJ", 14) + " |"
+        );
+        System.out.println("---------------------------------------------");
         if (!editoras.isEmpty()) {
             for (Editora editora : editoras) {
-                int max = editora.getNome().length() < 11 ? editora.getNome().length() : 12;
                 System.out.println(
-                        "[" + editora.getId() + "] " + editora.getNome().substring(0, max) + " - " + editora.getCnpj());
+                    "| " + ColunaUtils.formatarColuna(String.valueOf(editora.getId()), 6) + " | " +
+                    ColunaUtils.formatarColuna(editora.getNome(), 14) + " | " +
+                    ColunaUtils.formatarColuna(editora.getCnpj(), 14) + " |"
+                );
             }
         }
+        System.out.println("---------------------------------------------");
     }
 
     private void editarEditora() {

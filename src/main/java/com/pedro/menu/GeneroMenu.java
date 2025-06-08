@@ -1,6 +1,5 @@
 package com.pedro.menu;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Scanner;
 import com.pedro.config.IO;
 import com.pedro.models.Genero;
 import com.pedro.service.GeneroService;
+import com.pedro.utils.ColunaUtils;
 
 public class GeneroMenu {
 
@@ -60,14 +60,20 @@ public class GeneroMenu {
 
     public void listarGeneros() {
         List<Genero> generos = generoService.listar();
-        System.out.println("Gêneros");
-        System.out.println("ID | DESCRIÇÃO ");
+        System.out.println("----------GÊNERO-----------");
+        System.out.println(
+            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Descrição", 12) + " |"
+        );
+        System.out.println("---------------------------");
         if (!generos.isEmpty()) {
             for (Genero genero : generos) {
-                int max = genero.getGenero().length() < 11 ? genero.getGenero().length() : 12;
-                System.out.println("[" + genero.getId() + "]" + genero.getGenero().substring(0, max));
+                System.out.println(
+                    "| " + ColunaUtils.formatarColuna(String.valueOf(genero.getId()), 6) +
+                    " | " + ColunaUtils.formatarColuna(genero.getGenero(), 12) + " |"
+                );
             }
         }
+        System.out.println("---------------------------");
     }
 
     public void editarGenero() {
