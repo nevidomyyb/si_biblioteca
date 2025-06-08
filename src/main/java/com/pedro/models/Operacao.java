@@ -1,6 +1,6 @@
 package com.pedro.models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Operacao {
 
@@ -13,12 +13,15 @@ public class Operacao {
     private Date dataLocacao;
     private Date dataDevolucao;
     private Date dataDevolvido;
+    private String tipoUsuario;
+
+    public Operacao() {
+    }
 
     public Operacao(
             int funcionarioLocacaoId, int locador,
             int exemplarId, TipoOperacao tipoOperacao, Date dataLocacao,
-            Date dataDevolucao
-    ) {
+            Date dataDevolucao) {
         this.funcionarioLocacaoId = funcionarioLocacaoId;
         this.locador = locador;
         this.exemplarId = exemplarId;
@@ -29,6 +32,10 @@ public class Operacao {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getFuncionarioLocacaoId() {
@@ -93,5 +100,13 @@ public class Operacao {
 
     public void setDataDevolvido(Date dataDevolvido) {
         this.dataDevolvido = dataDevolvido;
+    }
+
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 }
