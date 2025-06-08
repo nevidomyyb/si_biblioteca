@@ -40,15 +40,20 @@ public class EnderecoService {
         return enderecosList;
     }
 
-    public boolean cadastrarEndereco(Endereco endereco){
+    public Endereco cadastrarEndereco(Endereco endereco){
         boolean valido = validarEndereco(endereco);
         if(!valido){
             System.err.println("[!] Não foi possível cadastrar esse endereço.");
-            return false;
+            return null;
         }
-        enderecoDAO.cadastrarEndereco(endereco);
-        System.out.println("[!] Endereço cadastrado com sucesso");
-        return true;
+        int generatedId = enderecoDAO.cadastrarEndereco(endereco);
+        if(generatedId != 0){
+            endereco.setId(generatedId);
+            System.out.println("[!] Endereço cadastrado com sucesso");
+            return endereco;
+        }
+        System.err.println("[!] Erro ao cadastrar endereço");
+        return null;
     }
 
     public boolean editar(int id, Endereco endereco){

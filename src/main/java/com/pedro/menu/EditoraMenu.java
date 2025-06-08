@@ -87,7 +87,7 @@ public class EditoraMenu {
         String nome = scanner.nextLine();
         System.out.println("[!] CNPJ (pressione [ENTER] para manter atual): ");
         String cnpj = scanner.nextLine();
-        Endereco endereco = enderecoMenu.selecionarOuCadastrarEndereco();
+        Endereco endereco = enderecoMenu.cadastrarOuPular();
         Editora editora = new Editora(nome.isEmpty() ? null : nome, cnpj.isEmpty() ? null : cnpj);
         editora.setEnderecoMatrizId(endereco == null ? 0 : endereco.getId());
         editoraService.editarEditora(id, editora);

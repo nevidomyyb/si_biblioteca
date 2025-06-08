@@ -18,11 +18,11 @@ public class EnderecoDAO {
         conexao = new Conexao();
     }
 
-    public boolean cadastrarEndereco(Endereco endereco){
+    public int cadastrarEndereco(Endereco endereco){
         try {
             ps = conexao.getConn().prepareStatement(
                 "INSERT INTO endereco(rua, numero, bairro, cep, cidade, estado) " +
-                "VALUES (?, ?, ?, ?, ?, ?)"
+                "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, endereco.getRua());
@@ -33,12 +33,17 @@ public class EnderecoDAO {
             ps.setString(6, endereco.getEstado());
 
             ps.executeUpdate();
-            ps.close();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if(generatedKeys.next()){
+                int generatedId = generatedKeys.getInt(1);
+                ps.close();
+                return generatedId;
+            }
 
-            return true;
+            return 0;
         }catch(SQLException e){
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 

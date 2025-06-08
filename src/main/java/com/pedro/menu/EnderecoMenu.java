@@ -67,8 +67,7 @@ public class EnderecoMenu {
         if (!cep.isEmpty()) {
             endereco.setCep(cep);
         }
-        enderecoService.cadastrarEndereco(endereco);
-        return endereco;
+        return enderecoService.cadastrarEndereco(endereco);
     }
 
     private void listarEnderecos() {
@@ -139,6 +138,20 @@ public class EnderecoMenu {
             default:
                 return null;
 
+        }
+    }
+
+    public Endereco cadastrarOuPular(){
+        System.out.println(
+            "[!] Deseja (1) Cadastrar um endereço, ou (2) Pular?"
+        );
+        int opc = scanner.nextInt();
+        scanner.nextLine();
+        switch (opc) {
+            case 1:
+                return cadastrarEndereco();
+            default:
+                return null;
         }
     }
 
