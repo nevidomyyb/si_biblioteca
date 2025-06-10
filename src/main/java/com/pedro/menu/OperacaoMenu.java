@@ -1,6 +1,7 @@
 package com.pedro.menu;
 
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ public class OperacaoMenu {
     private Scanner scanner;
     private OperacaoService operacaoService;
 
-    public OperacaoMenu(){
+    public OperacaoMenu() {
         io = new IO();
         scanner = new Scanner(System.in);
         operacaoService = new OperacaoService();
@@ -33,8 +34,7 @@ public class OperacaoMenu {
                 "3. Consultar Operações",
                 "4. Editar Operação",
                 "5. Excluir Operação",
-                "6. Sair"
-                ));
+                "6. Sair"));
 
         int opc = io.imprimirMenuRetornandoOpcao(opcoesOperacao, "MENU OPERAÇÕES");
         while (opc != 6) {
@@ -75,7 +75,7 @@ public class OperacaoMenu {
         System.out.println("[1] Aluno");
         System.out.println("[2] Professor");
         System.out.println("[3] Funcionário");
-        
+
         String tipoUsuario = scanner.nextLine().trim();
 
         int locador = 0;
@@ -89,22 +89,27 @@ public class OperacaoMenu {
         } else if (tipoUsuario.equals("3")) {
             System.out.print("[!] ID do Funcionário: ");
             locador = scanner.nextInt();
+        } 
+        scanner.nextLine(); 
+
+        boolean podeLocar = operacaoService.usuarioPossuiAtrasos(locador, tipoUsuario);
+
+        if (podeLocar == true) {
+            Date dataLocacao = DataUtils.getDataSqlAtual();
+            Date dataDevolucao = DataUtils.getFuturaSqlDate(14);
+
+            Operacao operacao = new Operacao(
+                    funcionario_locacao,
+                    locador,
+                    exemplar,
+                    TipoOperacao.LOCACAO,
+                    dataLocacao,
+                    dataDevolucao);
+
+            operacao.setTipoUsuario(tipoUsuario);
+            operacaoService.locacao(operacao);
+
         }
-
-        Date dataLocacao = DataUtils.getDataSqlAtual();
-        Date dataDevolucao = DataUtils.getFuturaSqlDate(14);
-
-        Operacao operacao = new Operacao(
-                funcionario_locacao,
-                locador,
-                exemplar,
-                TipoOperacao.LOCACAO,
-                dataLocacao,
-                dataDevolucao);
-
-        operacao.setTipoUsuario(tipoUsuario);
-
-        operacaoService.locacao(operacao);
     }
 
     public void devolucao() {
@@ -120,37 +125,53 @@ public class OperacaoMenu {
         operacaoService.devolucao(idOperacao, funcionario_devolucao, dataDevolvido);
     }
 
-    public void listarOperacoes(){
+    public void listarOperacoes() {
         List<Operacao> operacoes = operacaoService.listar();
-        System.out.println("-------------------------------------------------------OPERAÇÕES-------------------------------------------------");
         System.out.println(
-            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Func. Loc.", 6) +
-            " | " + ColunaUtils.formatarColuna("Func. Dev.", 6) + " | " + ColunaUtils.formatarColuna("Locador", 6) +
-            " | " + ColunaUtils.formatarColuna("Tipo Usuário", 12) + " | " + ColunaUtils.formatarColuna("Operação", 12) +
-            " | " + ColunaUtils.formatarColuna("Data Loc.", 12) + " | " + ColunaUtils.formatarColuna("Data Dev.", 12) +
-            " | " + ColunaUtils.formatarColuna("Devolvido Em", 12) + " |"
-        );
-        System.out.println("----------------------------------------------------------------------------------------------------------------");
-        if(!operacoes.isEmpty()){
-            for(Operacao operacao : operacoes){
+                "-------------------------------------------------------OPERAÇÕES-------------------------------------------------");
+        System.out.println(
+                "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Func. Loc.", 6) +
+                        " | " + ColunaUtils.formatarColuna("Func. Dev.", 6) + " | "
+                        + ColunaUtils.formatarColuna("Locador", 6) +
+                        " | " + ColunaUtils.formatarColuna("Tipo Usuário", 12) + " | "
+                        + ColunaUtils.formatarColuna("Operação", 12) +
+                        " | " + ColunaUtils.formatarColuna("Data Loc.", 12) + " | "
+                        + ColunaUtils.formatarColuna("Data Dev.", 12) +
+                        " | " + ColunaUtils.formatarColuna("Devolvido Em", 12) + " |");
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------------------");
+        if (!operacoes.isEmpty()) {
+            for (Operacao operacao : operacoes) {
+                String status;
+
+                if(operacao.getDataDevolvido() != null) {
+                    status = operacao.getDataDevolvido().toString();
+                } else if(operacao.getDataDevolucao().before(DataUtils.getDataSqlAtual())){
+                    status = "Atrasado";
+                } else {
+                    status = "Pendente";
+                }
 
                 System.out.println(
-                    "| " + ColunaUtils.formatarColuna(String.valueOf(operacao.getId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioLocacaoId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioDevolucaoId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(String.valueOf(operacao.getLocador()), 6) + " | " +
-                    ColunaUtils.formatarColuna(operacao.getTipoUsuario(), 12) + " | " +
-                    ColunaUtils.formatarColuna(operacao.getTipoOperacao().toString(), 12) + " | " +
-                    ColunaUtils.formatarColuna(operacao.getDataLocacao().toString(), 12) + " | " +
-                    ColunaUtils.formatarColuna(operacao.getDataDevolucao().toString(), 12) + " | " +
-                    ColunaUtils.formatarColuna(operacao.getDataDevolvido() == null ? "Pendente" : operacao.getDataDevolvido().toString(), 12) + " |"
-                );
-                System.out.println("----------------------------------------------------------------------------------------------------------------");
+                        "| " + ColunaUtils.formatarColuna(String.valueOf(operacao.getId()), 6) + " | " +
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioLocacaoId()), 6)
+                                + " | " +
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioDevolucaoId()), 6)
+                                + " | " +
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getLocador()), 6) + " | " +
+                                ColunaUtils.formatarColuna(operacao.getTipoUsuario(), 12) + " | " +
+                                ColunaUtils.formatarColuna(operacao.getTipoOperacao().toString(), 12) + " | " +
+                                ColunaUtils.formatarColuna(operacao.getDataLocacao().toString(), 12) + " | " +
+                                ColunaUtils.formatarColuna(operacao.getDataDevolucao().toString(), 12) + " | " +
+                                ColunaUtils.formatarColuna(status, 12)  
+                                + " |");
+                System.out.println(
+                        "----------------------------------------------------------------------------------------------------------------");
             }
         }
     }
 
-    public void editarOperacao(){
+    public void editarOperacao() {
         System.out.print("[!] ID da Operação: ");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -188,22 +209,22 @@ public class OperacaoMenu {
         String dataDevolvido = scanner.nextLine().trim();
 
         Operacao operacao = new Operacao(
-            funcionarioLocacao.isEmpty() ? 0 : Integer.parseInt(funcionarioLocacao),
-            locador.isEmpty() ? 0 : Integer.parseInt(locador),
-            exemplar.isEmpty() ? 0 : Integer.parseInt(exemplar),
-            tipoOperacao.isEmpty() ? null : tipoOperacao.equals("1") ? TipoOperacao.LOCACAO : TipoOperacao.DEVOLUCAO,
-            dataLocacao.isEmpty() ? null : DataUtils.stringToSqlDate(dataLocacao),
-            dataDevolucao.isEmpty() ? null : DataUtils.stringToSqlDate(dataDevolucao)
-        );
+                funcionarioLocacao.isEmpty() ? 0 : Integer.parseInt(funcionarioLocacao),
+                locador.isEmpty() ? 0 : Integer.parseInt(locador),
+                exemplar.isEmpty() ? 0 : Integer.parseInt(exemplar),
+                tipoOperacao.isEmpty() ? null
+                        : tipoOperacao.equals("1") ? TipoOperacao.LOCACAO : TipoOperacao.DEVOLUCAO,
+                dataLocacao.isEmpty() ? null : DataUtils.stringToSqlDate(dataLocacao),
+                dataDevolucao.isEmpty() ? null : DataUtils.stringToSqlDate(dataDevolucao));
 
         operacao.setFuncionarioDevolucaoId(funcionarioDevolucao.isEmpty() ? 0 : Integer.parseInt(funcionarioDevolucao));
         operacao.setTipoUsuario(tipoUsuario.isEmpty() ? null : tipoUsuario);
         operacao.setDataDevolvido(dataDevolvido.isEmpty() ? null : DataUtils.stringToSqlDate(dataDevolvido));
-        
+
         operacaoService.editar(id, operacao, tipoUsuario);
     }
 
-    public void excluirOperacao(){
+    public void excluirOperacao() {
         System.out.println("[!] ID da Operação: ");
         int id = scanner.nextInt();
         scanner.nextLine();
