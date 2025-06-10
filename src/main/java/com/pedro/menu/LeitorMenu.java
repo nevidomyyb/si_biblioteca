@@ -75,7 +75,7 @@ public class LeitorMenu {
                     editarLeitor();
                     break;
                 case 4:
-                    // excluir
+                    excluirLeitor();
                     break;
                 default:
                     System.out.println("[!] Opção inválida");
@@ -90,6 +90,35 @@ public class LeitorMenu {
         LeitorMenu leitorMenu = new LeitorMenu();
         leitorMenu.imprimirMenu();
     }
+    private void excluirLeitor() {
+        boolean sucesso = false;
+        System.out.println("Tipo de Usuário: ");
+        System.out.println("[1] Aluno");
+        System.out.println("[2] Professor");
+        String tipoUsuario = scanner.nextLine().trim();
+        int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
+
+        if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
+            System.out.println("[!] Tipo de Usuário inválido");
+        }
+        System.out.print("ID do Leitor: ");
+        String ID =scanner.nextLine().trim();
+        int IDInt = Integer.parseInt(ID);
+        if (tipoUsuarioInt == 1) {
+
+            sucesso = alunoService.excluirAluno(IDInt);
+        }
+        else {
+
+            sucesso = professorService.excluirProfessor(IDInt);
+        }
+        if (!sucesso) {
+            System.out.println("[!] Não foi possível excluir.");
+        } else {
+            System.out.println("[!] Excluído com sucesso.");
+        }
+    }
+
     private void editarLeitor() {
         boolean sucesso = false;
         System.out.println("Tipo de Usuário: ");

@@ -92,16 +92,16 @@ public class ProfessorService {
         return professorDAO.cadastrarProfessor(professor);
     }
 
-    public boolean excluirProfessor(Professor professor) {
-        if (professor.getId() == 0) {
+    public boolean excluirProfessor(int id) {
+        if (id == 0) {
             return false;
         }
-        boolean sucesso = professorDAO.excluirProfessor(professor.getId());
+        boolean sucesso = professorDAO.excluirProfessor(id);
         if (!sucesso) {
             System.err.println("[!] Erro ao excluir Professor");
             return false;
         }
-        System.out.println("[!] Excluindo professor");
+
         return true;
     }
 

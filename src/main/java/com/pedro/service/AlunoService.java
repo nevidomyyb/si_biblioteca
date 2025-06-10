@@ -93,16 +93,15 @@ public class AlunoService {
         return alunoDAO.cadastrarAluno(aluno);
     }
 
-    public boolean excluirAluno(Aluno aluno) {
-        if (aluno.getId() == 0) {
+    public boolean excluirAluno(int id) {
+        if (id == 0) {
             return false;
         }
-        boolean sucesso = alunoDAO.excluirAluno(aluno.getId());
+        boolean sucesso = alunoDAO.excluirAluno(id);
         if (!sucesso) {
             System.err.println("[!] Erro ao excluir aluno");
             return false;
         }
-        System.out.println("[!] Excluindo aluno");
         return true;
     }
 
