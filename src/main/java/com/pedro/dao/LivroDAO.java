@@ -1,22 +1,27 @@
 package com.pedro.dao;
 
 import com.pedro.config.Conexao;
+import com.pedro.models.Endereco;
 import com.pedro.models.Livro;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.spi.DirStateFactory.Result;
 
 public class LivroDAO {
 
     private Conexao conexao;
     private PreparedStatement ps;
 
-    public LivroDAO(){
+    public LivroDAO() {
         conexao = new Conexao();
     }
 
-    public void cadastrarLivro(Livro livro){
+    public void cadastrarLivro(Livro livro) {
         String SQL = "INSERT INTO livro (titulo, editor_id, edicao, sinopse, genero_id, autor_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -40,21 +45,20 @@ public class LivroDAO {
         }
     }
 
-    public void removerLivro(Livro livro) {
+    public boolean removerLivro(int id) {
         String SQL = "DELETE FROM livro WHERE id = ?";
 
         try {
             ps = conexao.getConn().prepareStatement(SQL);
 
-            ps.setInt(1, livro.getId()); // Pega o ID do livro para deletar
+            ps.setInt(1, id);
 
             ps.executeUpdate();
             ps.close();
-
-            System.out.println("Livro excluído com sucesso!");
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao excluir livro.");
+            return false;
         }
     }
 
@@ -69,7 +73,7 @@ public class LivroDAO {
         return null;
     }
 
-    public void editarLivro(Livro livro) {
+    public boolean editarLivro(int id, Livro livro) {
         try {
             String SQL = "UPDATE livro SET " +
                     "titulo = ?, editorId = ?, edicao = ?, sinopse = ?, generoId = ?, autorId = ? " +
@@ -83,14 +87,42 @@ public class LivroDAO {
             ps.setString(4, livro.getSinopse());
             ps.setInt(5, livro.getGeneroId());
             ps.setInt(6, livro.getAutorId());
-            ps.setInt(7, livro.getId());  // id do livro para o WHERE
+            ps.setInt(7, livro.getId());
 
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao editar livro");
+            return false;
         }
+    }
+
+    public Livro buscarLivroPorId(int id){
+        try {
+            ps = conexao.getConn().prepareStatement(
+                "SELECT * FROM livro WHERE id = ?"
+            );
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                Livro livro = new Livro(
+                    rs.getString("titulo"), 
+                    rs.getInt("editora_id"),
+                    rs.getString("edicao"), 
+                    rs.getString("sinopse"), 
+                    rs.getInt("genero_id"), 
+                    rs.getInt("autor_id"));
+                livro.setId(id);
+                
+                return livro;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

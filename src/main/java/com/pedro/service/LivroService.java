@@ -4,6 +4,7 @@ import com.pedro.dao.LivroDAO;
 import com.pedro.models.Livro;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,26 +16,38 @@ public class LivroService {
         this.livroDAO = new LivroDAO();
     }
 
-    public void cadastrarLivro(Livro livro) {
-        if (livro.getTitulo() == null || livro.getTitulo().isEmpty()) {
-            System.out.println("Erro: Título do livro não pode ser vazio.");
-            return;
+    public boolean cadastrarLivro(Livro livro) {
+        boolean valido = validarLivro(livro);
+        if(!valido){
+            return false;
         }
+        
         livroDAO.cadastrarLivro(livro);
+        return true;
     }
 
-    public void editarLivro(Livro livro) {
+    public boolean editarLivro(int id, Livro livro) {
         if (livro.getId() <= 0) {
-            System.out.println("Erro: ID do livro inválido.");
-            return;
+            System.err.println("Erro: ID do livro inválido.");
+            return false;
         }
-        livroDAO.editarLivro(livro);
+        boolean succ = livroDAO.editarLivro(id, livro);
+        if(!succ){
+            return false;
+        }
+        return true;
     }
 
-    public void removerLivro(int id) {
-        Livro livro = new Livro("", 0, "", "", 0, 0);
-        livro.setId(id);
-        livroDAO.removerLivro(livro);
+    public boolean removerLivro(int id) {
+        if(id <= 0){
+            System.err.println("[!] ID Inválido.");
+            return false;
+        }
+        boolean succ = livroDAO.removerLivro(id);
+        if(!succ){
+            return false;
+        }
+        return true;
     }
 
     public List<Livro> listarLivros() {
@@ -44,12 +57,11 @@ public class LivroService {
             while (rs != null && rs.next()) {
                 Livro livro = new Livro(
                         rs.getString("titulo"),
-                        rs.getInt("editor_id"),
+                        rs.getInt("editora_id"),
                         rs.getString("edicao"),
                         rs.getString("sinopse"),
                         rs.getInt("genero_id"),
-                        rs.getInt("autor_id")
-                );
+                        rs.getInt("autor_id"));
                 livro.setId(rs.getInt("id"));
                 lista.add(livro);
             }
@@ -57,5 +69,50 @@ public class LivroService {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public Livro buscarLivroPorId(int id){
+        if(id <= 0){
+            System.err.println("[!] ID Inválido.");
+            return null;
+        }
+        Livro livro = livroDAO.buscarLivroPorId(id);
+        return livro;
+    }
+
+    private static boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    public boolean validarLivro(Livro livro){
+        if(isNullOrEmpty(livro.getTitulo())){
+            System.err.println("[!] O Título do Livro é Obrigatório.");
+            return false;
+        }
+
+        if(livro.getEditorId() <= 0){
+            System.err.println("O ID da Editora é obrigatório.");
+            return false;
+        }
+
+        if(livro.getGeneroId() <= 0){
+            System.err.println("[!] O ID do Gênero é Obrigatório.");
+            return false;
+        }
+
+        if(livro.getAutorId() <= 0) {
+            System.err.println("[!] O ID do Autor é obrigatório.");
+        }
+
+        if(isNullOrEmpty(livro.getEdicao())){
+            System.err.println("[!] A Edição do Livro é obrigatória");
+            return false;
+        }
+
+        if(isNullOrEmpty(livro.getSinopse())){
+            System.err.println("[!] A Sinopse do Livro é obrigatória.");
+        }
+
+        return true;
     }
 }
