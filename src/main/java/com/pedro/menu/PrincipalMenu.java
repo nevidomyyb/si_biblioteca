@@ -11,14 +11,15 @@ public class PrincipalMenu {
     private IO io = new IO();
 
     public void imprimirMenuPrincipal() {
-        List<String> opcoesMenuPrincipal = new ArrayList<String>(Arrays.asList("1. Área livros", "2. Área Leitores",
+        List<String> opcoesMenuPrincipal = new ArrayList<String>(Arrays.asList("1. Área livros/exemplares", "2. Área Leitores",
                 "3. Área Operações", "4. Área Funcionários", "5. Área Gerencial", "6. Sair"));
         int opc = io.imprimirMenuRetornandoOpcao(opcoesMenuPrincipal, "MENU PRINCIPAL");
 
         while (opc != 6) {
             switch (opc) {
                 case 1:
-                    System.out.println("O MENU DE LIVRO AINDA NÃO FOI FEITO");
+                    LivroExemplarMenu livroExemplarMenu = new LivroExemplarMenu();
+                    livroExemplarMenu.imprimirMenu();
                     break;
                 case 2:
                     LeitorMenu leitorMenu = new LeitorMenu();
@@ -42,4 +43,8 @@ public class PrincipalMenu {
         }
     }
 
+
+    public static void main(String[] args) {
+        new PrincipalMenu().imprimirMenuPrincipal();
+    }
 }

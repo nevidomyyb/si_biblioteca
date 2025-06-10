@@ -56,7 +56,7 @@ public class FuncionarioMenu {
                             " | " + ColunaUtils.formatarColuna("Credencial", 12) + " | "
                             + ColunaUtils.formatarColuna("Login", 12) +
                             " | " + ColunaUtils.formatarColuna("Senha", 12) + " | " + "| "
-                            + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
+                            + ColunaUtils.formatarColuna("ID End.", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
                             " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
                             + ColunaUtils.formatarColuna("NÚMERO", 6) +
                             " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
