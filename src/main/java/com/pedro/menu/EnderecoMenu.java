@@ -104,13 +104,13 @@ public class EnderecoMenu {
     public String imprimirEndereco(int id) {
         Endereco endereco = enderecoService.buscarEnderecoPorId(id);
         if (endereco == null) {
-            return ColunaUtils.formatarColuna("-", 6) + " | " +
-                    ColunaUtils.formatarColuna("-", 12) + " | " +
-                    ColunaUtils.formatarColuna("-", 12) + " | " +
-                    ColunaUtils.formatarColuna("-", 6) + " | " +
-                    ColunaUtils.formatarColuna("-", 10) + " | " +
-                    ColunaUtils.formatarColuna("-", 12) + " | " +
-                    ColunaUtils.formatarColuna("-", 12);
+            return ColunaUtils.formatarColuna(null, 6) + " | " +
+                    ColunaUtils.formatarColuna(null, 12) + " | " +
+                    ColunaUtils.formatarColuna(null, 12) + " | " +
+                    ColunaUtils.formatarColuna(null, 6) + " | " +
+                    ColunaUtils.formatarColuna(null, 10) + " | " +
+                    ColunaUtils.formatarColuna(null, 12) + " | " +
+                    ColunaUtils.formatarColuna(null, 12);
         }
         return ColunaUtils.formatarColuna(String.valueOf(id), 6) + " | " +
                 ColunaUtils.formatarColuna(endereco.getRua(), 12) + " | " +
