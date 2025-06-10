@@ -44,7 +44,7 @@ public class EnderecoMenu {
                     excluirEndereco();
                     break;
                 default:
-                   System.err.println("[!] Opção Inválida.");
+                    System.err.println("[!] Opção Inválida.");
             }
             opc = io.imprimirMenuRetornandoOpcao(opcoesEndereco, "MENU ENDEREÇO");
         }
@@ -73,29 +73,52 @@ public class EnderecoMenu {
 
     private void listarEnderecos() {
         List<Endereco> enderecos = enderecoService.listarEnderecos();
-        System.out.println("--------------------------------------------ENDEREÇOS---------------------------------------");
         System.out.println(
-            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
-            " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | " + ColunaUtils.formatarColuna("NÚMERO", 6) + 
-            " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12) +
-            " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |"
-        );
-        System.out.println("--------------------------------------------------------------------------------------------");
+                "--------------------------------------------ENDEREÇOS---------------------------------------");
+        System.out.println(
+                "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
+                        " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
+                        + ColunaUtils.formatarColuna("NÚMERO", 6) +
+                        " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
+                        +
+                        " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------");
         if (!enderecos.isEmpty()) {
             for (Endereco endereco : enderecos) {
                 System.out.println(
-                    "| " + ColunaUtils.formatarColuna(String.valueOf(endereco.getId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(endereco.getRua(), 12) + 
-                    " | " + ColunaUtils.formatarColuna(endereco.getBairro(), 12) +
-                    " | " + ColunaUtils.formatarColuna(endereco.getNumero(), 6) + 
-                    " | " + ColunaUtils.formatarColuna(endereco.getCep(), 10) +
-                    ColunaUtils.formatarColuna(endereco.getCidade(), 12) + 
-                    " | " + ColunaUtils.formatarColuna(endereco.getEstado(),12) + " |"
-                );
+                        "| " + ColunaUtils.formatarColuna(String.valueOf(endereco.getId()), 6) + " | " +
+                                ColunaUtils.formatarColuna(endereco.getRua(), 12) +
+                                " | " + ColunaUtils.formatarColuna(endereco.getBairro(), 12) +
+                                " | " + ColunaUtils.formatarColuna(endereco.getNumero(), 6) +
+                                " | " + ColunaUtils.formatarColuna(endereco.getCep(), 10) +
+                                ColunaUtils.formatarColuna(endereco.getCidade(), 12) +
+                                " | " + ColunaUtils.formatarColuna(endereco.getEstado(), 12) + " |");
             }
         }
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------");
 
+    }
+
+    public String imprimirEndereco(int id) {
+        Endereco endereco = enderecoService.buscarEnderecoPorId(id);
+        if (endereco == null) {
+            return ColunaUtils.formatarColuna("-", 6) + " | " +
+                    ColunaUtils.formatarColuna("-", 12) + " | " +
+                    ColunaUtils.formatarColuna("-", 12) + " | " +
+                    ColunaUtils.formatarColuna("-", 6) + " | " +
+                    ColunaUtils.formatarColuna("-", 10) + " | " +
+                    ColunaUtils.formatarColuna("-", 12) + " | " +
+                    ColunaUtils.formatarColuna("-", 12);
+        }
+        return ColunaUtils.formatarColuna(String.valueOf(id), 6) + " | " +
+                ColunaUtils.formatarColuna(endereco.getRua(), 12) + " | " +
+                ColunaUtils.formatarColuna(endereco.getBairro(), 12) + " | " +
+                ColunaUtils.formatarColuna(endereco.getNumero(), 6) + " | " +
+                ColunaUtils.formatarColuna(endereco.getCep(), 10) + " | " +
+                ColunaUtils.formatarColuna(endereco.getCidade(), 12) + " | " +
+                ColunaUtils.formatarColuna(endereco.getEstado(), 12);
     }
 
     private void editarEndereco() {
@@ -151,10 +174,9 @@ public class EnderecoMenu {
         }
     }
 
-    public Endereco cadastrarOuPular(){
+    public Endereco cadastrarOuPular() {
         System.out.println(
-            "[!] Deseja (1) Cadastrar um endereço, ou (2) Pular?"
-        );
+                "[!] Deseja (1) Cadastrar um endereço, ou (2) Pular?");
         int opc = scanner.nextInt();
         scanner.nextLine();
         switch (opc) {
