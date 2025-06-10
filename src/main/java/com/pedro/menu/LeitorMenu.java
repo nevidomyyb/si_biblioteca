@@ -6,6 +6,7 @@ import com.pedro.models.Endereco;
 import com.pedro.models.Professor;
 import com.pedro.service.AlunoService;
 import com.pedro.service.ProfessorService;
+import com.pedro.utils.ColunaUtils;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class LeitorMenu {
     private Scanner scanner;
     AlunoService alunoService = new AlunoService();
     ProfessorService professorService = new ProfessorService();
+    EnderecoMenu enderecoMenu = new EnderecoMenu();
 
     public LeitorMenu() {
         scanner = new Scanner(System.in);
@@ -39,12 +41,11 @@ public class LeitorMenu {
     public void imprimirMenu() {
         IO io = new IO();
         List<String> opcoesMenu = List.of(
-            "[1] Cadastrar Leitor",
-            "[2] Listar Leitores",
-            "[3] Editar Leitor",
-            "[4] Excluir Leitor",
-            "[5] Voltar"
-        );
+                "[1] Cadastrar Leitor",
+                "[2] Listar Leitores",
+                "[3] Editar Leitor",
+                "[4] Excluir Leitor",
+                "[5] Voltar");
         int opc = io.imprimirMenuRetornandoOpcao(opcoesMenu, "Gerenciar Leitores");
         while (opc != 5) {
             switch (opc) {
@@ -54,24 +55,55 @@ public class LeitorMenu {
                 case 2:
                     List<Aluno> alunos = alunoService.listarAlunos();
                     List<Professor> professores = professorService.listarProfessors();
-                    System.out.println("Leitores");
-                    System.out.println("ID | Nome | E-mail | Tipo ");
+                    System.out.println(
+                            "----------------------------------------------------------------------------------------------------------------LEITORES--------------------------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12)
+                                    + " | " + ColunaUtils.formatarColuna("CPF", 14) +
+                                    " | " + ColunaUtils.formatarColuna("Email", 25) + " | "
+                                    + ColunaUtils.formatarColuna("Telefone", 12) +
+                                    " | " + ColunaUtils.formatarColuna("Matrícula/Credencial", 20) + " | "
+                                    + ColunaUtils.formatarColuna("Login", 12) +
+                                    " | " + ColunaUtils.formatarColuna("Senha", 12) + " | "
+                                    + ColunaUtils.formatarColuna("ID End.", 6) + " | "
+                                    + ColunaUtils.formatarColuna("RUA", 12) +
+                                    " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
+                                    + ColunaUtils.formatarColuna("NÚMERO", 6) +
+                                    " | " + ColunaUtils.formatarColuna("CEP", 10) + " | "
+                                    + ColunaUtils.formatarColuna("CIDADE", 12)
+                                    +
+                                    " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
+                    System.out.println("-".repeat(230));
                     if (!alunos.isEmpty()) {
                         for (Aluno aluno : alunos) {
-                            int max = aluno.getNome().length() < 11 ? aluno.getNome().length()  : 12;
-                            System.out.println("[" + aluno.getId() + "] " + aluno.getNome().substring(0, max-1) + " - " + aluno.getEmail() + " - " + "Aluno");
-
-                        }
+                            System.out.println(
+                                    "| " + ColunaUtils.formatarColuna(String.valueOf(aluno.getId()), 6) + " | "
+                                            + ColunaUtils.formatarColuna(aluno.getNome(), 12) + " | " +
+                                            ColunaUtils.formatarColuna(aluno.getCpf(), 14) + 
+                                            " | " + ColunaUtils.formatarColuna(aluno.getEmail(), 25) + " | "
+                                            + ColunaUtils.formatarColuna(aluno.getTelefone(), 12) +
+                                            " | " + ColunaUtils.formatarColuna(aluno.getMatricula(), 20) + " | "
+                                            + ColunaUtils.formatarColuna(aluno.getLogin(), 12) +
+                                            " | " + ColunaUtils.formatarColuna(aluno.getSenha(), 12) + " | "
+                                            + enderecoMenu.imprimirEndereco(aluno.getEnderecoId()));
+                        };
                     }
-                    if (!professores.isEmpty()){
+
+                    if (!professores.isEmpty()) {
                         for (Professor professor : professores) {
-                            int max = professor.getNome().length() < 11 ? professor.getNome().length() : 12;
-                            System.out.println("[" + professor.getId() + "]" + professor.getNome().substring(0, max-1) + " - " + professor.getEmail() + " - " + "Professor");
+
+                            System.out.println(
+                                "| " + ColunaUtils.formatarColuna(String.valueOf(professor.getId()), 6) + " | " +
+                                ColunaUtils.formatarColuna(professor.getNome(), 12) + " | " + ColunaUtils.formatarColuna(professor.getCpf(), 14) +
+                                " | " + ColunaUtils.formatarColuna(professor.getEmail(), 12) + " | " + 
+                                ColunaUtils.formatarColuna(professor.getTelefone(), 12) + " | " + ColunaUtils.formatarColuna(professor.getCredencial(), 20) +
+                                " | " + ColunaUtils.formatarColuna(professor.getLogin(), 12) + " | " + ColunaUtils.formatarColuna(professor.getSenha(), 12) + 
+                                " | " + enderecoMenu.imprimirEndereco(professor.getEnderecoId())
+                            );
                         }
                     }
                     break;
                 case 3:
-                    //editar
                     editarLeitor();
                     break;
                 case 4:
@@ -90,6 +122,7 @@ public class LeitorMenu {
         LeitorMenu leitorMenu = new LeitorMenu();
         leitorMenu.imprimirMenu();
     }
+
     private void excluirLeitor() {
         boolean sucesso = false;
         System.out.println("Tipo de Usuário: ");
@@ -102,13 +135,12 @@ public class LeitorMenu {
             System.out.println("[!] Tipo de Usuário inválido");
         }
         System.out.print("ID do Leitor: ");
-        String ID =scanner.nextLine().trim();
+        String ID = scanner.nextLine().trim();
         int IDInt = Integer.parseInt(ID);
         if (tipoUsuarioInt == 1) {
 
             sucesso = alunoService.excluirAluno(IDInt);
-        }
-        else {
+        } else {
 
             sucesso = professorService.excluirProfessor(IDInt);
         }
@@ -131,13 +163,12 @@ public class LeitorMenu {
             System.out.println("[!] Tipo de Usuário inválido");
         }
         System.out.print("ID do Leitor: ");
-        String ID =scanner.nextLine().trim();
+        String ID = scanner.nextLine().trim();
         int IDInt = Integer.parseInt(ID);
         if (tipoUsuarioInt == 1) {
             Aluno aluno = lerDadosAluno(true);
             sucesso = alunoService.editarAluno(IDInt, aluno);
-        }
-        else {
+        } else {
             Professor professor = lerDadosProfessor(true);
             sucesso = professorService.editarProfessor(IDInt, professor);
         }
@@ -147,6 +178,7 @@ public class LeitorMenu {
             System.out.println("[!] Cadastrado com sucesso.");
         }
     }
+
     private void cadastrarLeitor() {
         boolean sucesso = false;
         System.out.println("Tipo de Usuário: ");
@@ -156,12 +188,10 @@ public class LeitorMenu {
         int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
         if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
             System.out.println("[!] Tipo de Usuário inválido");
-        }
-        else if (tipoUsuarioInt == 1) {
+        } else if (tipoUsuarioInt == 1) {
             Aluno aluno = lerDadosAluno(false);
             sucesso = alunoService.registrarAluno(aluno);
-        }
-        else {
+        } else {
             Professor professor = lerDadosProfessor(false);
             sucesso = professorService.registrarProfessor(professor);
         }
@@ -187,7 +217,8 @@ public class LeitorMenu {
 
         System.out.println("ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
-        if (endereco != null) prof.setEnderecoId(endereco.getId());
+        if (endereco != null)
+            prof.setEnderecoId(endereco.getId());
 
         System.out.print("Disciplina: ");
         prof.setDisciplina(scanner.nextLine());
@@ -235,7 +266,8 @@ public class LeitorMenu {
 
         System.out.println("ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
-        if (endereco != null) aluno.setEnderecoId(endereco.getId());
+        if (endereco != null)
+            aluno.setEnderecoId(endereco.getId());
 
         if (!modoEditar) {
             System.out.print("Login: ");
