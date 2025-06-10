@@ -4,6 +4,7 @@ import com.pedro.config.IO;
 import com.pedro.models.Endereco;
 import com.pedro.models.Funcionario;
 import com.pedro.service.FuncionarioService;
+import com.pedro.utils.ColunaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ public class FuncionarioMenu {
     private final FuncionarioService funcionarioService = new FuncionarioService();
     private final Scanner scanner = new Scanner(System.in);
     private final IO io = new IO();
+    private EnderecoMenu enderecoMenu = new EnderecoMenu();
 
     public void exibirMenu() {
         List<String> opcoesFuncionario = new ArrayList<String>(Arrays.asList(
@@ -43,37 +45,78 @@ public class FuncionarioMenu {
         funcionarioService.registrarFuncionario(func);
     }
 
-    private void listarFuncionarios() {
-        List<Funcionario> lista = funcionarioService.listarFuncionarios();
-        if (lista.isEmpty()) {
-            System.out.println("Nenhum funcionário encontrado.");
-        } else {
-            for (Funcionario f : lista) {
-                System.out.println("- " + f.getId() + ": " + f.getNome() + " | " + f.getEmail());
+        private void listarFuncionarios() {
+            List<Funcionario> funcionarios = funcionarioService.listarFuncionarios();
+            System.out.println(
+                    "---------------------------------------------------------------------------------------------------FUNCIONÁRIOS----------------------------------------------------------------------------------------------");
+            System.out.println(
+                    "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12) +
+                            " | " + ColunaUtils.formatarColuna("Email", 25) + " | "
+                            + ColunaUtils.formatarColuna("Telefone", 12) +
+                            " | " + ColunaUtils.formatarColuna("Credencial", 12) + " | "
+                            + ColunaUtils.formatarColuna("Login", 12) +
+                            " | " + ColunaUtils.formatarColuna("Senha", 12) + " | " + "| "
+                            + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
+                            " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
+                            + ColunaUtils.formatarColuna("NÚMERO", 6) +
+                            " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
+                            +
+                            " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
+            System.out.println("-".repeat(205));
+            if (!funcionarios.isEmpty()) {
+                for (Funcionario funcionario : funcionarios) {
+                    System.out.println(
+                            "| " + ColunaUtils.formatarColuna(String.valueOf(funcionario.getId()), 6) + " | "
+                                    + ColunaUtils.formatarColuna(funcionario.getNome(), 12) +
+                                    " | " + ColunaUtils.formatarColuna(funcionario.getEmail(), 25) + " | "
+                                    + ColunaUtils.formatarColuna(funcionario.getTelefone(), 12) +
+                                    " | " + ColunaUtils.formatarColuna(funcionario.getCredencial(), 12) + " | "
+                                    + ColunaUtils.formatarColuna(funcionario.getLogin(), 12) +
+                                    " | " + ColunaUtils.formatarColuna(funcionario.getSenha(), 12) + " | " +
+                                    enderecoMenu.imprimirEndereco(funcionario.getEnderecoId())
+                    );
+                }
             }
         }
-    }
 
     private void editarFuncionario() {
         System.out.print("ID Funcionário: ");
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        Funcionario novoFuncionario = lerDadosFuncionario();
-        funcionarioService.editarFuncionario(id, novoFuncionario);
+        System.out.print("NOME (pressione [ENTER] para manter atual): ");
+        String nome = scanner.nextLine();
+
+        System.out.print("EMAIL (pressione [ENTER] para manter atual): ");
+        String email = scanner.nextLine();
+
+        System.out.print("CPF (pressione [ENTER] para manter atual): ");
+        String cpf = scanner.nextLine();
+
+        System.out.print("TELEFONE (pressione [ENTER] para manter atual): ");
+        String telefone = scanner.nextLine();
+
+        System.out.print("CREDENCIAL (pressione [ENTER] para manter atual): ");
+        String credencial = scanner.nextLine();
+
+        System.out.print("LOGIN (pressione [ENTER] para manter atual): ");
+        String login = scanner.nextLine();
+
+        System.out.print("SENHA (pressione [ENTER] para manter atual): ");
+        String senha = scanner.nextLine();
+
+        Endereco endereco = enderecoMenu.cadastrarOuPular();
+        Funcionario funcionario = new Funcionario(cpf, nome, telefone, email, credencial, id, login, senha);
+        funcionario.setEnderecoId(endereco == null ? 0 : endereco.getId());
+
+        funcionarioService.editarFuncionario(id, funcionario);
     }
 
     private void removerFuncionario() {
         System.out.print("ID Funcionário: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-
-        Funcionario func = funcionarioService.consultarFuncionario(id);
-        if (func != null) {
-            funcionarioService.excluirFuncionario(func);
-        } else {
-            System.out.println("Funcionário não encontrado.");
-        }
+        funcionarioService.excluirFuncionario(id);
     }
 
     private Funcionario lerDadosFuncionario() {

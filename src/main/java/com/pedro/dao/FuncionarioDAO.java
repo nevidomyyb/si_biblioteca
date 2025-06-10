@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FuncionarioDAO {
 
@@ -20,27 +22,56 @@ public class FuncionarioDAO {
 
     public boolean editarFuncionario(int id, Funcionario funcionario) {
         try {
-            String SQL = """
-            UPDATE funcionario SET 
-                cpf = ?, nome = ?, telefone = ?, email = ?,
-                endereco_id = ?, credencial = ?,
-                
-            """;
-            ps = conexao.getConn().prepareStatement(SQL);
-            ps.setString(1, funcionario.getCpf());
-            ps.setString(2, funcionario.getNome());
-            ps.setString(3, funcionario.getTelefone());
-            ps.setString(4, funcionario.getEmail());
-            if (funcionario.getEnderecoId() != 0) {
-                ps.setInt(5, funcionario.getEnderecoId());
-            } else {
-                ps.setNull(5, java.sql.Types.INTEGER);
-            }
-            ps.setString(6, funcionario.getCredencial());
-            ps.close();
-            return true;
+            String query = "UPDATE funcionario SET ";
+            List<String> campos = new ArrayList<String>();
+            List<Object> valores = new ArrayList<Object>();
 
-        } catch (SQLException e) {
+            if(validarString(funcionario.getNome())){
+                campos.add("nome = ?");
+                valores.add(funcionario.getNome());
+            }
+
+            if(validarString(funcionario.getTelefone())){
+                campos.add("telefone = ?");
+                valores.add(funcionario.getTelefone());
+            }
+
+            if(validarString(funcionario.getEmail())){
+                campos.add("email = ?");
+                valores.add(funcionario.getEmail());
+            }
+
+            if(validarString(funcionario.getCredencial())){
+                campos.add("credencial = ?");
+                valores.add(funcionario.getCredencial());
+            }
+
+            if(validarString(funcionario.getCpf())){
+                campos.add("cpf = ?");
+                valores.add(funcionario.getTelefone());
+            }
+
+            if(validarString(funcionario.getLogin())){
+                campos.add("login = ?");
+                valores.add(funcionario.getLogin());
+            }
+
+            if(validarString(funcionario.getSenha())){
+                campos.add("senha = ?");
+                valores.add(funcionario.getSenha());
+            }
+
+            query += String.join(", ", campos) + "WHERE id = ?";
+            ps = conexao.getConn().prepareStatement(query);
+            int index = 1;
+            for(Object valor : valores){
+                ps.setObject(index++, valor);
+            }
+            ps.setInt(index, id);
+            ps.executeUpdate();
+            ps.close();
+            return true;            
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
@@ -51,6 +82,7 @@ public class FuncionarioDAO {
         boolean sucesso = autenticacaoDAO.cadastrarUsuario(funcionario, null, null);
 
     }
+
     public ResultSet listarFuncionarios() {
         try {
             return conexao.getConn().createStatement().executeQuery("SELECT * FROM funcionario;");
@@ -71,9 +103,8 @@ public class FuncionarioDAO {
                 funcionario = new Funcionario(
                         rs.getString("cpf"), rs.getString("nome"),
                         rs.getString("telefone"), rs.getString("email"),
-                        rs.getString("credencial"), rs.getInt("endereco_id"),rs.getString("login"),
-                        rs.getString("senha")
-                );
+                        rs.getString("credencial"), rs.getInt("endereco_id"), rs.getString("login"),
+                        rs.getString("senha"));
                 return funcionario;
 
             }
@@ -94,9 +125,8 @@ public class FuncionarioDAO {
                 funcionario = new Funcionario(
                         rs.getString("cpf"), rs.getString("nome"),
                         rs.getString("telefone"), rs.getString("email"),
-                        rs.getString("credencial"), rs.getInt("endereco_id"),rs.getString("login"),
-                        rs.getString("senha")
-                );
+                        rs.getString("credencial"), rs.getInt("endereco_id"), rs.getString("login"),
+                        rs.getString("senha"));
                 return funcionario;
 
             }
@@ -105,19 +135,25 @@ public class FuncionarioDAO {
         }
         return null;
     }
+
     public boolean excluirFuncionario(int id) {
         try {
             ps = conexao.getConn().prepareStatement(
-                    "DELETE FROM funcionario WHERE id = ?"
-            );
+                    "DELETE FROM funcionario WHERE id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
             return true;
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    private boolean validarString(String str) {
+        if (str != null && !str.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
 }

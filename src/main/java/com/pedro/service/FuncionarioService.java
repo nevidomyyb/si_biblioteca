@@ -56,12 +56,18 @@ public class FuncionarioService {
     }
 
     public boolean editarFuncionario(int id, Funcionario funcionario) {
-        boolean valido = validarFuncionario(funcionario);
-        if(!valido){
+        if(funcionario == null){
+            System.err.println("[!] Funcionário Inválido");
             return false;
         }
+
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+            return false;
+        }
+
         funcionarioDAO.editarFuncionario(id, funcionario);
-        System.out.println("[!] Funcionário editado com sucesso");
+        System.out.println("[!] Funcionário editado com sucesso.");
         return true;
     }
 
@@ -75,11 +81,11 @@ public class FuncionarioService {
         return true;
     }
 
-    public boolean excluirFuncionario(Funcionario funcionario) {
-        if (funcionario.getId() == 0) {
+    public boolean excluirFuncionario(int id) {
+        if (id <= 0) {
             return false;
         }
-        boolean sucesso = funcionarioDAO.excluirFuncionario(funcionario.getId());
+        boolean sucesso = funcionarioDAO.excluirFuncionario(id);
         if (!sucesso) {
             System.err.println("[!] Erro ao excluir funcionário");
             return false;
