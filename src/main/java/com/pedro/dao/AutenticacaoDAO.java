@@ -28,6 +28,14 @@ public class AutenticacaoDAO {
             Aluno aluno,
             Professor professor
     )  {
+        if (
+            (aluno != null && aluno.getLogin().length() > 12) ||
+            (funcionario != null && funcionario.getLogin().length() > 12) ||
+            (professor != null && professor.getLogin().length() > 12)
+        ) {
+            System.out.println("[!] O login do leitor não pode ter mais que 12 caracteres.");
+            return false;
+        }
         if (professor != null) {
             String senhaHashed;
             try {

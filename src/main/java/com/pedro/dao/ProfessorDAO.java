@@ -25,8 +25,8 @@ public class ProfessorDAO {
             String SQL = """
             UPDATE professor SET 
                 cpf = ?, nome = ?, telefone = ?, email = ?,
-                endereco_id = ?, disciplina = ?, credencial = ?,
-      
+                endereco_id = ?, disciplina = ?, credencial = ?
+                WHERE id = ?
                 
             """;
             ps = conexao.getConn().prepareStatement(SQL);
@@ -41,6 +41,7 @@ public class ProfessorDAO {
             }
             ps.setString(6, professor.getDisciplina());
             ps.setString(7, professor.getCredencial());
+            ps.setInt(8, id);
             ps.close();
             return true;
 
@@ -50,9 +51,9 @@ public class ProfessorDAO {
         }
     }
 
-    public void cadastrarProfessor(Professor professor) {
+    public boolean cadastrarProfessor(Professor professor) {
         AutenticacaoDAO autenticacaoDAO = new AutenticacaoDAO();
-        boolean sucesso = autenticacaoDAO.cadastrarUsuario(null, null, professor);
+        return autenticacaoDAO.cadastrarUsuario(null, null, professor);
 
     }
 
@@ -103,7 +104,7 @@ public class ProfessorDAO {
                         rs.getString("senha")
                 );
                 professor.setTelefone(rs.getString("telefone"));
-                professor.setEnderecoId(rs.getInt("enderecoId"));
+                professor.setEnderecoId(rs.getInt("endereco_id"));
                 return professor;
 
             }

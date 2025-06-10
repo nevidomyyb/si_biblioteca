@@ -22,6 +22,7 @@ public class Professor extends Pessoa{
         this.login = login;
         this.senha = senha;
     }
+    public void setId(int id) {this.id = id;}
 
     public String getDisciplina() {
         return disciplina;

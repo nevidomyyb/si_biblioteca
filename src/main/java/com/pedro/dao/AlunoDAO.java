@@ -25,6 +25,7 @@ public class AlunoDAO {
                 cpf = ?, nome = ?, telefone = ?, email = ?,
                 endereco_id = ?, curso = ?, periodo = ?,
                 turno = ?, matricula = ?
+                WHERE id = ?
             """;
             ps = conexao.getConn().prepareStatement(SQL);
             ps.setString(1, aluno.getCpf());
@@ -40,6 +41,7 @@ public class AlunoDAO {
             ps.setString(7, aluno.getPeriodo());
             ps.setString(8, aluno.getTurno());
             ps.setString(9, aluno.getMatricula());
+            ps.setInt(10, id);
             ps.executeUpdate();
             ps.close();
             return true;
@@ -50,10 +52,9 @@ public class AlunoDAO {
         }
     }
 
-    public void cadastrarAluno(Aluno aluno) {
+    public boolean cadastrarAluno(Aluno aluno) {
         AutenticacaoDAO autenticacaoDAO = new AutenticacaoDAO();
-        boolean sucesso = autenticacaoDAO.cadastrarUsuario(null, aluno, null);
-
+        return autenticacaoDAO.cadastrarUsuario(null, aluno, null);
     }
 
     public ResultSet listarAlunos() {
@@ -108,7 +109,7 @@ public class AlunoDAO {
                         rs.getString("senha")
                 );
                 aluno.setTelefone(rs.getString("telefone"));
-                aluno.setEnderecoId(rs.getInt("enderecoId"));
+                aluno.setEnderecoId(rs.getInt("endereco_id"));
                 return aluno;
 
             }

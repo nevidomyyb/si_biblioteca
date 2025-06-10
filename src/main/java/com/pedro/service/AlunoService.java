@@ -60,10 +60,25 @@ public class AlunoService {
     }
 
     public boolean editarAluno(int id, Aluno aluno) {
+        Aluno existente = consultarAluno(id);
+        if (existente == null) {
+            System.out.println("[!] Aluno com esse ID não existe.");
+            return false;
+        }
+        if (isNullOrEmpty(aluno.getLogin())){
+            aluno.setLogin(existente.getLogin());
+        }
+        if (isNullOrEmpty(aluno.getSenha())) {
+            aluno.setSenha(existente.getSenha());
+        }
+        if (aluno.getEnderecoId() == 0) {
+            aluno.setEnderecoId(existente.getEnderecoId());
+        }
         boolean valido = validarAluno(aluno);
         if(!valido){
             return false;
         }
+
         alunoDAO.editarAluno(id, aluno);
         System.out.println("[!] Aluno editado com sucesso");
         return true;
@@ -74,9 +89,8 @@ public class AlunoService {
         if(!valido){
             return false;
         }
-        alunoDAO.cadastrarAluno(aluno);
-        System.out.println("[!] Aluno cadastrado com sucesso");
-        return true;
+
+        return alunoDAO.cadastrarAluno(aluno);
     }
 
     public boolean excluirAluno(Aluno aluno) {

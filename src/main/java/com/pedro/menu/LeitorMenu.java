@@ -2,6 +2,7 @@ package com.pedro.menu;
 
 import com.pedro.config.IO;
 import com.pedro.models.Aluno;
+import com.pedro.models.Endereco;
 import com.pedro.models.Professor;
 import com.pedro.service.AlunoService;
 import com.pedro.service.ProfessorService;
@@ -40,64 +41,15 @@ public class LeitorMenu {
         List<String> opcoesMenu = List.of(
             "[1] Cadastrar Leitor",
             "[2] Listar Leitores",
-            "[3] Voltar"
+            "[3] Editar Leitor",
+            "[4] Excluir Leitor",
+            "[5] Voltar"
         );
         int opc = io.imprimirMenuRetornandoOpcao(opcoesMenu, "Gerenciar Leitores");
-        while (opc != 4) {
+        while (opc != 5) {
             switch (opc) {
                 case 1:
-                    System.out.println("Nome:");
-                    String nomeUsuario = scanner.nextLine().trim();
-                    System.out.println("CPF:");
-                    String cpfAluno = scanner.nextLine().trim();
-                    System.out.println("Telefone:");
-                    String telefoneUsuario  = scanner.nextLine().trim();
-                    System.out.println("Email:");
-                    String emailUsuario  = scanner.nextLine().trim();
-                    System.out.println("Login:");
-                    String loginUsuario  = scanner.nextLine().trim();
-                    System.out.println("Senha:");
-                    String senhaUsuario = scanner.nextLine().trim();
-                    System.out.println("Tipo de Usuário: ");
-                    System.out.println("    [1] Aluno");
-                    System.out.println("    [2] Professor");
-                    String tipoUsuario = scanner.nextLine().trim();
-                    int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
-                    if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
-                        System.out.println("[!] Tipo de Usuário inválido");
-                    }
-                    else if (tipoUsuarioInt == 1) {
-                        System.out.println("Curso:");
-                        String cursoUsuario = scanner.nextLine().trim();
-                        System.out.println("Período:");
-                        String periodoUsuario = scanner.nextLine().trim();
-                        System.out.println("Matricula:");
-                        String matriculaUsuario = scanner.nextLine().trim();
-                        System.out.println("Turno:");
-                        String turnoUsuario = scanner.nextLine().trim();
-
-                        boolean sucesso = alunoService.registrarAluno(new Aluno(cpfAluno,
-                            nomeUsuario,emailUsuario,cursoUsuario,
-                            periodoUsuario, turnoUsuario, matriculaUsuario, loginUsuario, senhaUsuario
-                        ));
-                        if (!sucesso)
-                            System.out.println("[!] Não foi possível cadastrar.");
-                    }
-                    else {
-                        System.out.println("Disciplina:");
-                        String disciplinaUsuario = scanner.nextLine().trim();
-                        System.out.println("Credencial:");
-                        String credencialUsuario = scanner.nextLine().trim();
-
-                        boolean sucesso = professorService.registrarProfessor(new Professor(
-                            cpfAluno, nomeUsuario, emailUsuario,
-                            disciplinaUsuario, credencialUsuario,
-                            loginUsuario, senhaUsuario
-                        ));
-                        if (!sucesso)
-                            System.out.println("[!] Não foi possível cadastrar.");
-                    }
-
+                    cadastrarLeitor();
                     break;
                 case 2:
                     List<Aluno> alunos = alunoService.listarAlunos();
@@ -107,19 +59,23 @@ public class LeitorMenu {
                     if (!alunos.isEmpty()) {
                         for (Aluno aluno : alunos) {
                             int max = aluno.getNome().length() < 11 ? aluno.getNome().length()  : 12;
-                            System.out.println("[" + aluno.getId() + "] " + aluno.getNome().substring(0, max) + " - " + aluno.getEmail() + " - " + "Aluno");
+                            System.out.println("[" + aluno.getId() + "] " + aluno.getNome().substring(0, max-1) + " - " + aluno.getEmail() + " - " + "Aluno");
 
                         }
                     }
                     if (!professores.isEmpty()){
                         for (Professor professor : professores) {
                             int max = professor.getNome().length() < 11 ? professor.getNome().length() : 12;
-                            System.out.println("[" + professor.getId() + "]" + professor.getNome().substring(0, max) + " - " + professor.getEmail() + " - " + "Professor");
+                            System.out.println("[" + professor.getId() + "]" + professor.getNome().substring(0, max-1) + " - " + professor.getEmail() + " - " + "Professor");
                         }
                     }
                     break;
-
                 case 3:
+                    //editar
+                    editarLeitor();
+                    break;
+                case 4:
+                    // excluir
                     break;
                 default:
                     System.out.println("[!] Opção inválida");
@@ -133,6 +89,134 @@ public class LeitorMenu {
     public static void main(String[] args) {
         LeitorMenu leitorMenu = new LeitorMenu();
         leitorMenu.imprimirMenu();
+    }
+    private void editarLeitor() {
+        boolean sucesso = false;
+        System.out.println("Tipo de Usuário: ");
+        System.out.println("[1] Aluno");
+        System.out.println("[2] Professor");
+        String tipoUsuario = scanner.nextLine().trim();
+        int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
+
+        if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
+            System.out.println("[!] Tipo de Usuário inválido");
+        }
+        System.out.print("ID do Leitor: ");
+        String ID =scanner.nextLine().trim();
+        int IDInt = Integer.parseInt(ID);
+        if (tipoUsuarioInt == 1) {
+            Aluno aluno = lerDadosAluno(true);
+            sucesso = alunoService.editarAluno(IDInt, aluno);
+        }
+        else {
+            Professor professor = lerDadosProfessor(true);
+            sucesso = professorService.editarProfessor(IDInt, professor);
+        }
+        if (!sucesso) {
+            System.out.println("[!] Não foi possível cadastrar.");
+        } else {
+            System.out.println("[!] Cadastrado com sucesso.");
+        }
+    }
+    private void cadastrarLeitor() {
+        boolean sucesso = false;
+        System.out.println("Tipo de Usuário: ");
+        System.out.println("[1] Aluno");
+        System.out.println("[2] Professor");
+        String tipoUsuario = scanner.nextLine().trim();
+        int tipoUsuarioInt = Integer.parseInt(tipoUsuario);
+        if (tipoUsuarioInt != 1 && tipoUsuarioInt != 2) {
+            System.out.println("[!] Tipo de Usuário inválido");
+        }
+        else if (tipoUsuarioInt == 1) {
+            Aluno aluno = lerDadosAluno(false);
+            sucesso = alunoService.registrarAluno(aluno);
+        }
+        else {
+            Professor professor = lerDadosProfessor(false);
+            sucesso = professorService.registrarProfessor(professor);
+        }
+        if (!sucesso) {
+            System.out.println("[!] Não foi possível editar.");
+        }
+    }
+
+    private Professor lerDadosProfessor(boolean modoEditar) {
+        Professor prof = new Professor();
+        EnderecoMenu enderecoMenu = new EnderecoMenu();
+        System.out.print("Nome: ");
+        prof.setNome(scanner.nextLine());
+
+        System.out.print("CPF: ");
+        prof.setCpf(scanner.nextLine());
+
+        System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
+        prof.setEmail(scanner.nextLine());
+
+        System.out.print("Email: ");
+        prof.setEmail(scanner.nextLine());
+
+        System.out.println("ENDEREÇO");
+        Endereco endereco = enderecoMenu.cadastrarOuPular();
+        if (endereco != null) prof.setEnderecoId(endereco.getId());
+
+        System.out.print("Disciplina: ");
+        prof.setDisciplina(scanner.nextLine());
+
+        System.out.print("Credencial: ");
+        prof.setCredencial(scanner.nextLine());
+
+        if (!modoEditar) {
+            System.out.print("Login: ");
+            prof.setLogin(scanner.nextLine());
+
+            System.out.print("Senha: ");
+            prof.setSenha(scanner.nextLine());
+        }
+        return prof;
+
+    }
+
+    private Aluno lerDadosAluno(boolean modoEditar) {
+        Aluno aluno = new Aluno();
+        EnderecoMenu enderecoMenu = new EnderecoMenu();
+        System.out.print("Nome: ");
+        aluno.setNome(scanner.nextLine());
+
+        System.out.print("CPF: ");
+        aluno.setCpf(scanner.nextLine());
+
+        System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
+        aluno.setEmail(scanner.nextLine());
+
+        System.out.print("Email: ");
+        aluno.setEmail(scanner.nextLine());
+
+        System.out.print("Curso: ");
+        aluno.setCurso(scanner.nextLine());
+
+        System.out.print("Periodo: ");
+        aluno.setPeriodo(scanner.nextLine());
+
+        System.out.print("Matrícula: ");
+        aluno.setMatricula(scanner.nextLine());
+
+        System.out.print("Turno: ");
+        aluno.setTurno(scanner.nextLine());
+
+        System.out.println("ENDEREÇO");
+        Endereco endereco = enderecoMenu.cadastrarOuPular();
+        if (endereco != null) aluno.setEnderecoId(endereco.getId());
+
+        if (!modoEditar) {
+            System.out.print("Login: ");
+            aluno.setLogin(scanner.nextLine());
+
+            System.out.print("Senha: ");
+            aluno.setSenha(scanner.nextLine());
+        }
+
+        return aluno;
     }
 
 }
