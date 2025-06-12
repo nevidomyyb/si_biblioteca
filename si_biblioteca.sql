@@ -242,39 +242,3 @@ INSERT INTO operacao (
     exemplar_id, tipo_operacao, data_locacao, data_devolucao, data_devolvido
 ) VALUES
     (2, NULL, NULL, NULL, 1, 7, 'LOCACAO', '2025-06-07', '2025-06-14', NULL);
-
--- 1.
--- Caso o objetivo seja visualizar os dados do aluno de todas as locações
-SELECT op.id, op.tipo_operacao, al.*
-FROM operacao op
-         LEFT JOIN aluno al ON op.aluno_id = al.id
-WHERE op.aluno_id IS NOT NULL AND op.tipo_operacao = 'LOCACAO';
--- Caso o objetivo seja visualizar os dados do aluno em uma locação específica
-SELECT op.id, op.tipo_operacao, al.*
-FROM operacao op
-         LEFT JOIN aluno al ON op.aluno_id = al.id
-WHERE op.aluno_id IS NOT NULL AND op.id = 3;
-
--- 2.
--- Select com foco em exemplares com locações ainda não devolvidas.
-SELECT l.titulo, COUNT(*)
-FROM livro l
-         LEFT JOIN exemplar e ON e.livro_id = l.id
-         LEFT JOIN operacao op ON op.exemplar_id = e.id
-WHERE op.tipo_operacao = 'LOCACAO'
-GROUP BY l.titulo;
--- Select com o objetivo de checar a quantidade de exemplares de um livro especifico.
-SELECT l.titulo, COUNT(*)
-FROM livro l
-         LEFT JOIN exemplar e ON e.livro_id = l.id
-         LEFT JOIN operacao op ON op.exemplar_id = e.id
-WHERE op.tipo_operacao = 'LOCACAO' AND l.id = 4
-GROUP BY l.titulo;
-
--- 3.
-SELECT p.nome, COUNT(*) AS 'quantidade_locada'
-FROM professor p
-         LEFT JOIN operacao op ON op.professor_id = p.id
-WHERE op.tipo_operacao = 'LOCACAO'
-GROUP BY p.nome
-ORDER BY quantidade_locada DESC LIMIT 1;
