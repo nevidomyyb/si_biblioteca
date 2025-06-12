@@ -15,26 +15,42 @@ public class ExemplarService {
         this.exemplarDao = new ExemplarDao();
     }
 
-    public void cadastrarExemplar(Exemplar exemplar) {
+    public boolean cadastrarExemplar(Exemplar exemplar) {
         if (exemplar.getLivroId() <= 0) {
-            System.out.println("Erro: livroId inválido para o exemplar.");
-            return;
+            System.out.println("ID Inválido.");
+            return false;
         }
-        exemplarDao.cadastrarExemplar(exemplar);
+
+        boolean succ = exemplarDao.cadastrarExemplar(exemplar);
+        if(!succ) {
+            return false;
+        }
+        return true;
     }
 
-    public void editarExemplar(Exemplar exemplar) {
+    public boolean editarExemplar(int id, Exemplar exemplar) {
         if (exemplar.getId() <= 0) {
-            System.out.println("Erro: ID inválido para editar exemplar.");
-            return;
+            System.out.println("ID Inválido.");
+            return false;
         }
-        exemplarDao.editarExemplar(exemplar);
+
+        boolean succ = exemplarDao.editarExemplar(id, exemplar);
+        if(!succ){
+            return false;
+        }
+
+        return true;
     }
 
-    public void excluirExemplar(int id) {
-        Exemplar exemplar = new Exemplar(0); // Inicializa só para passar o ID
-        exemplar.setId(id);
-        exemplarDao.excluirExemplar(exemplar);
+    public boolean excluirExemplar(int id) {
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+        }
+        boolean succ = exemplarDao.excluirExemplar(id);
+        if(!succ){
+            return false;
+        }
+        return true;
     }
 
     public List<Exemplar> listarExemplares() {
@@ -42,7 +58,7 @@ public class ExemplarService {
         try {
             ResultSet rs = exemplarDao.consultarExemplares();
             while (rs != null && rs.next()) {
-                Exemplar exemplar = new Exemplar(rs.getInt("livroId"));
+                Exemplar exemplar = new Exemplar(rs.getInt("livro_id"));
                 exemplar.setId(rs.getInt("id"));
                 lista.add(exemplar);
             }

@@ -23,28 +23,28 @@ public class OperacaoService {
         try {
             ResultSet operacoes = operacaoDao.listar();
             operacaoList = new ArrayList<Operacao>();
-            while(operacoes.next()){
+            while (operacoes.next()) {
                 Operacao operacao = new Operacao();
                 operacao.setId(operacoes.getInt("id"));
                 operacao.setFuncionarioLocacaoId(operacoes.getInt("funcionario_locacao_id"));
                 operacao.setFuncionarioLocacaoId(operacoes.getInt("funcionario_devolucao_id"));
 
-                if(operacoes.getInt("aluno_id") != 0){
+                if (operacoes.getInt("aluno_id") != 0) {
                     operacao.setTipoUsuario("Aluno");
                     operacao.setLocador(operacoes.getInt("aluno_id"));
-                } else if(operacoes.getInt("professor_id") != 0){
+                } else if (operacoes.getInt("professor_id") != 0) {
                     operacao.setTipoUsuario("Professor");
                     operacao.setLocador(operacoes.getInt("professor_id"));
-                } else if(operacoes.getInt("funcionario_id") != 0){
+                } else if (operacoes.getInt("funcionario_id") != 0) {
                     operacao.setTipoUsuario("Funcionário");
                     operacao.setLocador(operacoes.getInt("funcionario_id"));
                 }
 
                 operacao.setExemplarId(operacoes.getInt("exemplar_id"));
-                
-                if(operacoes.getString("tipo_operacao").equals("LOCACAO")){
+
+                if (operacoes.getString("tipo_operacao").equals("LOCACAO")) {
                     operacao.setTipoOperacao(TipoOperacao.LOCACAO);
-                } else if(operacoes.getString("tipo_operacao").equals("DEVOLUCAO")){
+                } else if (operacoes.getString("tipo_operacao").equals("DEVOLUCAO")) {
                     operacao.setTipoOperacao(TipoOperacao.DEVOLUCAO);
                 }
 
@@ -54,7 +54,7 @@ public class OperacaoService {
                 operacaoList.add(operacao);
             }
             return operacaoList;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return operacaoList;
@@ -62,12 +62,12 @@ public class OperacaoService {
 
     public boolean locacao(Operacao operacao) {
         boolean valido = valido(operacao);
-        if(!valido){
+        if (!valido) {
             System.err.println("[!] Não foi possível cadastrar operação");
             return false;
         }
 
-        if(operacaoDao.isExemplarLocado(operacao.getExemplarId())){
+        if (operacaoDao.isExemplarLocado(operacao.getExemplarId())) {
             System.err.println("[!] Erro: o exemplar já está locado.");
             return false;
         }
@@ -78,7 +78,7 @@ public class OperacaoService {
     }
 
     public boolean excluirOperacao(int id) {
-        if(id <= 0){
+        if (id <= 0) {
             System.err.println("[!] ID Inválido");
             return false;
         }
@@ -89,12 +89,12 @@ public class OperacaoService {
     }
 
     public boolean editar(int id, Operacao operacao, String tipoUsuario) {
-        if(operacao == null){
+        if (operacao == null) {
             System.err.println("[!] Operação Inválida.");
             return false;
         }
 
-        if(id <= 0){
+        if (id <= 0) {
             System.err.println("[!] ID Inválido");
             return false;
         }
@@ -104,51 +104,59 @@ public class OperacaoService {
         return true;
     }
 
-    public boolean devolucao(int id, int funcionarioDevolucao, Date dataDevolvido){
-        if(funcionarioDevolucao == 0){
+    public boolean devolucao(int id, int funcionarioDevolucao, Date dataDevolvido) {
+        if (funcionarioDevolucao == 0) {
             System.out.println("[!] O ID do Funcionário responsável pela devolução é obrigatório");
         }
-        
+
         operacaoDao.devolucao(id, funcionarioDevolucao, dataDevolvido);
         return true;
-         
+
     }
 
-    private static boolean isNullOrEmpty(String str){
+    private static boolean isNullOrEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
-    public boolean valido(Operacao operacao){
-        if(operacao.getFuncionarioLocacaoId() == 0){
+    public boolean valido(Operacao operacao) {
+        if (operacao.getFuncionarioLocacaoId() == 0) {
             System.err.println("[!] ID do Funcionário responsável pela locação é obrigatório.");
             return false;
         }
 
-        if(operacao.getLocador() == 0){
+        if (operacao.getLocador() == 0) {
             System.err.println("[!] O ID do Locador é obrigatório.");
             return false;
         }
 
-        if(operacao.getExemplarId() == 0){
+        if (operacao.getExemplarId() == 0) {
             System.err.println("[!] O ID do Exemplar é obrigatório.");
             return false;
         }
 
-        if(isNullOrEmpty(operacao.getTipoOperacao().toString())){
+        if (isNullOrEmpty(operacao.getTipoOperacao().toString())) {
             System.err.println("[!] O Tipo de Operação é obrigatório.");
             return false;
         }
 
-        if(isNullOrEmpty(operacao.getDataLocacao().toString())){
+        if (isNullOrEmpty(operacao.getDataLocacao().toString())) {
             System.err.println("[!] A Data de Locação é obrigatória.");
             return false;
         }
 
-        if(isNullOrEmpty(operacao.getDataDevolucao().toString())){
+        if (isNullOrEmpty(operacao.getDataDevolucao().toString())) {
             System.err.println("[! A Data de Devolução é obrigatória.");
             return false;
         }
 
         return true;
+    }
+
+    public boolean usuarioPossuiAtrasos(int id, String tipoUsuario) {
+        if (operacaoDao.usuarioPossuiAtraso(id, tipoUsuario)) {
+            System.err.println("[!] Nâo foi possível realizar a locação, pois o usuário possui pendências.");
+            return false; 
+        }
+        return true; 
     }
 }

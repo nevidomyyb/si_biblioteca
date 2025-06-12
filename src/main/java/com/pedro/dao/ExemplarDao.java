@@ -27,7 +27,7 @@ public class ExemplarDao {
         return null;
     }
 
-    public void cadastrarExemplar(Exemplar exemplar) {
+    public boolean cadastrarExemplar(Exemplar exemplar) {
         try {
             String SQL = "INSERT INTO exemplar(livroId) VALUES (?)";
 
@@ -37,42 +37,46 @@ public class ExemplarDao {
 
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao inserir exemplar");
+            return false;
         }
     }
 
-    public void editarExemplar(Exemplar exemplar) {
+    public boolean editarExemplar(int id, Exemplar exemplar) {
         try {
             String SQL = "UPDATE exemplar SET livroId = ? WHERE id = ?";
 
             ps = conexao.getConn().prepareStatement(SQL);
 
             ps.setInt(1, exemplar.getLivroId());
-            ps.setInt(2, exemplar.getId());
+            ps.setInt(2, id);
 
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao editar exemplar");
+            return false;
         }
     }
 
-    public void excluirExemplar(Exemplar exemplar) {
+    public boolean excluirExemplar(int id) {
         try {
             String SQL = "DELETE FROM exemplar WHERE id = ?";
 
             ps = conexao.getConn().prepareStatement(SQL);
 
-            ps.setInt(1, exemplar.getId());
+            ps.setInt(1, id);
 
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao excluir exemplar");
+            return false;
+
         }
     }
 
