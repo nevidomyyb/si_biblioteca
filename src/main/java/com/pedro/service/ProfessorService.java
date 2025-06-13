@@ -141,5 +141,11 @@ public class ProfessorService {
         return true;
     }
 
-
+    public String obterProfessorComMaisLocacoes() {
+        String resultado = professorDAO.buscarProfessorComMaisLocacoes();
+        if (resultado == null || resultado.isEmpty()) {
+            return "[!] Nenhum professor encontrado com locações.";
+        }
+        return resultado;
+    }
 }

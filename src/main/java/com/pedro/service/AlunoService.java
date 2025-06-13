@@ -149,5 +149,13 @@ public class AlunoService {
         return true;
     }
 
+    public Aluno consultarAlunoPorLocacaoId(int locacaoId) {
+        Aluno aluno = alunoDAO.obterAlunoPorIdLocacao(locacaoId);
+        if (aluno != null) {
+            return aluno;
+        }
+        System.err.println("[!] Nenhum aluno encontrado para a locação de ID " + locacaoId);
+        return null;
+    }
 
 }
