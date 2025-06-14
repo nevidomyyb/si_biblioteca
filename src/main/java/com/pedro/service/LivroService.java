@@ -10,7 +10,7 @@ import java.util.List;
 
 public class LivroService {
 
-    private LivroDAO livroDAO;
+    protected LivroDAO livroDAO;
 
     public LivroService() {
         this.livroDAO = new LivroDAO();

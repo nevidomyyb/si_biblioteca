@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AlunoService {
 
-    private AlunoDAO alunoDAO;
+    protected AlunoDAO alunoDAO;
 
     public AlunoService() {
         alunoDAO = new AlunoDAO();
