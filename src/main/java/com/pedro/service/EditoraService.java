@@ -42,9 +42,7 @@ public class EditoraService {
             System.err.println("[!] Não foi possível cadastrar essa editora");
             return false;
         }
-        editoraDao.cadastrarEditora(editora);
-        System.out.println("[!] Editora cadastrado com sucesso.");
-        return true;
+        return editoraDao.cadastrarEditora(editora);
     }
 
     public boolean excluirEditora(int id){
@@ -53,9 +51,7 @@ public class EditoraService {
             return false;
         }
 
-        editoraDao.excluirEditora(id);
-        System.out.println("[!] Editora excluída");
-        return true;
+        return editoraDao.excluirEditora(id);
     }
 
     public boolean editarEditora(int id, Editora editora){
@@ -70,9 +66,7 @@ public class EditoraService {
             return false;
         }
 
-        editoraDao.editarEditora(id, editora);
-        System.out.println("[!] Editora editada com sucesso");
-        return true;
+        return editoraDao.editarEditora(id, editora);
     }
 
     private static boolean isNullOrEmpty(String str){

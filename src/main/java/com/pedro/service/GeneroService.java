@@ -45,9 +45,7 @@ public class GeneroService {
             System.err.println("[!] Não foi possível cadastrar esse gênero");
             return false;
         }
-        generoDao.cadastrarGenero(genero);
-        System.out.println("[!] Gênero cadastrado com sucesso.");
-        return true;
+        return generoDao.cadastrarGenero(genero);
     }
 
     public boolean excluirGenero(int id){
@@ -55,9 +53,7 @@ public class GeneroService {
             System.err.println("[!] ID Inválido");
             return false;
         }
-        generoDao.excluirGenero(id);
-        System.out.println("[!] Gênero excluído");
-        return true;
+        return generoDao.excluirGenero(id);
     }
 
     public boolean editarGenero(int id, Genero genero) {
@@ -71,9 +67,7 @@ public class GeneroService {
             return false;
         }
 
-        generoDao.editarGenero(id, genero);
-        System.out.println("[!] Gênero editado com sucesso");
-        return true;
+        return generoDao.editarGenero(id, genero);
     }
     
     private static boolean validarGenero(Genero genero){

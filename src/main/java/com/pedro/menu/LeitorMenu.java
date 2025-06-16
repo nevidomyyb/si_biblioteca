@@ -85,7 +85,7 @@ public class LeitorMenu {
                                             " | " + ColunaUtils.formatarColuna(aluno.getMatricula(), 20) + " | "
                                             + ColunaUtils.formatarColuna(aluno.getLogin(), 12) +
                                             " | " + ColunaUtils.formatarColuna(aluno.getSenha(), 12) + " | "
-                                            + enderecoMenu.imprimirEndereco(aluno.getEnderecoId()));
+                                            + enderecoMenu.imprimirEnderecoPorId(aluno.getEnderecoId()));
                         };
                     }
 
@@ -98,7 +98,7 @@ public class LeitorMenu {
                                 " | " + ColunaUtils.formatarColuna(professor.getEmail(), 12) + " | " + 
                                 ColunaUtils.formatarColuna(professor.getTelefone(), 12) + " | " + ColunaUtils.formatarColuna(professor.getCredencial(), 20) +
                                 " | " + ColunaUtils.formatarColuna(professor.getLogin(), 12) + " | " + ColunaUtils.formatarColuna(professor.getSenha(), 12) + 
-                                " | " + enderecoMenu.imprimirEndereco(professor.getEnderecoId())
+                                " | " + enderecoMenu.imprimirEnderecoPorId(professor.getEnderecoId())
                             );
                         }
                     }
@@ -210,7 +210,7 @@ public class LeitorMenu {
         prof.setCpf(scanner.nextLine());
 
         System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
-        prof.setEmail(scanner.nextLine());
+        prof.setTelefone(scanner.nextLine());
 
         System.out.print("Email: ");
         prof.setEmail(scanner.nextLine());
@@ -247,7 +247,7 @@ public class LeitorMenu {
         aluno.setCpf(scanner.nextLine());
 
         System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
-        aluno.setEmail(scanner.nextLine());
+        aluno.setTelefone(scanner.nextLine());
 
         System.out.print("Email: ");
         aluno.setEmail(scanner.nextLine());

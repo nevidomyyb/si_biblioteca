@@ -68,35 +68,27 @@ public class EditoraDAO {
 
     public boolean editarEditora(int id, Editora editora){
         try {
-            String query = "UPDATE editora SET ";
-            List<String> campos = new ArrayList<>();
-            List<Object> valores = new ArrayList<>();
+            ps = conexao.getConn().prepareStatement(
+                """
+                    UPDATE editora SET nome = ?, cnpj = ?, endereco_id = ?
+                    WHERE id = ?         
+                """
+            );
 
-            if(validarString(editora.getNome())){
-                campos.add("nome = ?");
-                valores.add(editora.getNome());
-            }
-            if(validarString(editora.getCnpj())){
-                campos.add("cnpj = ?");
-                valores.add(editora.getCnpj());
+            ps.setString(1, editora.getNome());
+            ps.setString(2, editora.getCnpj());
+
+            if(editora.getEnderecoMatrizId() != 0){
+                ps.setInt(3, editora.getEnderecoMatrizId());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
             }
 
-            if (campos.isEmpty()){
-                return false;
-            }
-
-            query += String.join(", ", campos) + "WHERE id = ?";
-            ps = conexao.getConn().prepareStatement(query);
-            int index = 1;
-            for (Object valor : valores){
-                ps.setObject(index++, valor);
-            }
-            ps.setInt(index, id);
+            ps.setInt(4, id);
             ps.executeUpdate();
             ps.close();
             return true;
-
-        } catch(SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }

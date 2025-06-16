@@ -28,7 +28,13 @@ public class EnderecoDAO {
             ps.setString(1, endereco.getRua());
             ps.setString(2, endereco.getNumero());
             ps.setString(3, endereco.getBairro());
-            ps.setString(4, endereco.getCep());
+            
+            if(validarString(endereco.getCep())){
+                ps.setString(4, endereco.getCep());
+            } else {
+                ps.setNull(4, java.sql.Types.NULL);
+            }
+
             ps.setString(5, endereco.getCidade());
             ps.setString(6, endereco.getEstado());
 
@@ -59,53 +65,32 @@ public class EnderecoDAO {
 
     public boolean editarEndereco(int id, Endereco endereco){
         try {
-            String query = "UPDATE endereco SET ";
-            List<String> campos = new ArrayList<>();
-            List<Object> valores = new ArrayList<>();
+            ps = conexao.getConn().prepareStatement(
+                """
+                    UPDATE endereco SET rua = ?, numero = ?,
+                    bairro = ?, cep  = ?, cidade = ?,
+                    estado = ? WHERE id = ?
+                """
+            );
 
-            if (validarString(endereco.getRua())) {
-                campos.add("rua = ?");
-                valores.add(endereco.getRua());
-            }
-            if (validarString(endereco.getNumero())) {
-                campos.add("numero = ?");
-                valores.add(endereco.getNumero());
-            }
-            if (validarString(endereco.getBairro())) {
-                campos.add("bairro = ?");
-                valores.add(endereco.getBairro());
-            }
-            if (validarString(endereco.getCep())) {
-                campos.add("cep = ?");
-                valores.add(endereco.getCep());
-            }
-            if (validarString(endereco.getCidade())) {
-                campos.add("cidade = ?");
-                valores.add(endereco.getCidade());
-            }
-            if (validarString(endereco.getEstado())) {
-                campos.add("estado = ?");
-                valores.add(endereco.getEstado());
-            }
-
-            if (campos.isEmpty()) {
-                return false;
-            }
-
-            query += String.join(", ", campos) + " WHERE id = ?";
+            ps.setString(1, endereco.getRua());
+            ps.setString(2, endereco.getNumero());
+            ps.setString(3, endereco.getBairro());
             
-            ps = conexao.getConn().prepareStatement(query);
-            int index = 1;
-            for (Object valor : valores){
-                ps.setObject(index++, valor);
+            if(validarString(endereco.getCep())){
+                ps.setString(4, endereco.getCep());
+            } else {
+                ps.setNull(4, java.sql.Types.NULL);
             }
-            ps.setInt(index, id);
-                
+
+            ps.setString(5, endereco.getCidade());
+            ps.setString(6, endereco.getEstado());
+            ps.setInt(7, id);
+
             ps.executeUpdate();
             ps.close();
             return true;
-            
-        } catch(SQLException e) {
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }

@@ -43,9 +43,7 @@ public class AutorService {
             System.err.println("[!] Não foi possível cadastrar essa editora");
             return false;
         }
-        autorDao.cadastrarAutor(autor);
-        System.out.println("[!] Autor cadastrado com sucesso.");
-        return true;
+        return autorDao.cadastrarAutor(autor);
     }
 
 
@@ -55,9 +53,7 @@ public class AutorService {
             return false;
         }
 
-        autorDao.excluirAutor(id);
-        System.out.println("[!] Autor excluído.");
-        return true;
+        return autorDao.excluirAutor(id);
     }
 
     public boolean editar(int id, Autor autor){
@@ -71,9 +67,7 @@ public class AutorService {
             return false;
         }
 
-        autorDao.editarAutor(id, autor);
-        System.out.println("[!] Autor editado com sucesso.");
-        return true;
+        return autorDao.editarAutor(id, autor);
     }
 
     private static boolean isNullOrEmpty(String str){

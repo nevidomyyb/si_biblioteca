@@ -51,23 +51,7 @@ public class EnderecoMenu {
     }
 
     public Endereco cadastrarEndereco() {
-        System.out.print("[!] RUA: ");
-        String rua = scanner.nextLine();
-        System.out.print("[!] BAIRRO: ");
-        String bairro = scanner.nextLine();
-        System.out.print("[!] NÚMERO: ");
-        String numero = scanner.nextLine();
-        System.out.print("[!] CIDADE: ");
-        String cidade = scanner.nextLine();
-        System.out.print("[!] ESTADO: ");
-        String estado = scanner.nextLine();
-        System.out.print("[!] CEP (opcional, pressione [ENTER] para pular): ");
-        String cep = scanner.nextLine();
-
-        Endereco endereco = new Endereco(rua, bairro, numero, cidade, estado);
-        if (!cep.isEmpty()) {
-            endereco.setCep(cep);
-        }
+        Endereco endereco = lerDadosEndereco();
         return enderecoService.cadastrarEndereco(endereco);
     }
 
@@ -82,8 +66,7 @@ public class EnderecoMenu {
                         " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
                         +
                         " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
-        System.out.println(
-                "--------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(90));
         if (!enderecos.isEmpty()) {
             for (Endereco endereco : enderecos) {
                 System.out.println(
@@ -96,12 +79,11 @@ public class EnderecoMenu {
                                 " | " + ColunaUtils.formatarColuna(endereco.getEstado(), 12) + " |");
             }
         }
-        System.out.println(
-                "--------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(90));
 
     }
 
-    public String imprimirEndereco(int id) {
+    public String imprimirEnderecoPorId(int id) {
         Endereco endereco = enderecoService.buscarEnderecoPorId(id);
 
         if (id <= 0 || endereco == null) {
@@ -124,55 +106,50 @@ public class EnderecoMenu {
 
     private void editarEndereco() {
         listarEnderecos();
-        System.out.println("[!] ID do Endereço: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("[!] RUA (pressione [ENTER] para manter atual): ");
-        String rua = scanner.nextLine();
-        System.out.print("[!] BAIRRO (pressione [ENTER] para manter atual): ");
-        String bairro = scanner.nextLine();
-        System.out.print("[!] NÚMERO (pressione [ENTER] para manter atual): ");
-        String numero = scanner.nextLine();
-        System.out.print("[!] CIDADE (pressione [ENTER] para manter atual): ");
-        String cidade = scanner.nextLine();
-        System.out.print("[!] ESTADO (pressione [ENTER] para manter atual):");
-        String estado = scanner.nextLine();
-        System.out.print("[!] CEP (pressione [ENTER] para manter atual):");
-        String cep = scanner.nextLine();
-
-        Endereco endereco = new Endereco(rua.isEmpty() ? null : rua, bairro.isEmpty() ? null : bairro,
-                numero.isEmpty() ? null : numero, cidade.isEmpty() ? null : cidade, estado.isEmpty() ? null : estado);
-        if (!cep.isEmpty()) {
-            endereco.setCep(cep);
+        System.out.print("[!] ID do Endereço: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        Endereco endereco = lerDadosEndereco();
+        boolean succ = enderecoService.editar(id, endereco);
+        if(succ){
+            System.out.println("[!] Endereço editado.");
+        } else {
+            System.err.println("[!] Não foi possível editar endereço.");
         }
-        enderecoService.editar(id, endereco);
     }
 
     private void excluirEndereco() {
         listarEnderecos();
-        System.out.println("[!] ID do Endereço: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        enderecoService.excluirEndereco(id);
-    }
-
-    public Endereco selecionarOuCadastrarEndereco() {
-        System.out.println(
-                "[!] Deseja (1) Selecionar um endereço existente, (2) Cadastrar novo endereço, ou (3) Pular? ");
-        int opc = scanner.nextInt();
-        scanner.nextLine();
-        switch (opc) {
-            case 1:
-                listarEnderecos();
-                System.out.println("[!] ID do Endereço: ");
-                int id = scanner.nextInt();
-                return enderecoService.buscarEnderecoPorId(id);
-            case 2:
-                return cadastrarEndereco();
-            default:
-                return null;
-
+        System.out.print("[!] ID do Endereço: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        boolean succ = enderecoService.excluirEndereco(id);
+        if(succ){
+            System.out.println("[!] Endereço excluído.");
+        } else {
+            System.err.println("[!] Não foi possível excluir endereço.");
         }
+    }
+    
+    public Endereco lerDadosEndereco(){
+        Endereco endereco = new Endereco();
+        System.out.print("[!] RUA: ");
+        endereco.setRua(scanner.nextLine().trim());
+
+        System.out.print("[!] NÚMERO: ");
+        endereco.setNumero(scanner.nextLine().trim());
+
+        System.out.print("[!] BAIRRO: ");
+        endereco.setBairro(scanner.nextLine().trim());
+
+        System.out.print("[!] CEP (opcional, pressione [ENTER] para pular): ");
+        endereco.setCep(scanner.nextLine().trim());
+
+        System.out.print("[!] CIDADE: ");
+        endereco.setCidade(scanner.nextLine().trim());
+
+        System.out.print("[!] ESTADO: ");
+        endereco.setEstado(scanner.nextLine().trim());
+
+        return endereco;
     }
 
     public Endereco cadastrarOuPular() {

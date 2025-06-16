@@ -73,7 +73,7 @@ public class FuncionarioMenu {
                                     " | " + ColunaUtils.formatarColuna(funcionario.getCredencial(), 12) + " | "
                                     + ColunaUtils.formatarColuna(funcionario.getLogin(), 12) +
                                     " | " + ColunaUtils.formatarColuna(funcionario.getSenha(), 12) + " | " +
-                                    enderecoMenu.imprimirEndereco(funcionario.getEnderecoId())
+                                    enderecoMenu.imprimirEnderecoPorId(funcionario.getEnderecoId())
                     );
                 }
             }

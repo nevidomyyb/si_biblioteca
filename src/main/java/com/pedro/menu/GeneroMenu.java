@@ -53,18 +53,22 @@ public class GeneroMenu {
     }
 
     public void cadastrarGenero() {
-        System.out.println("[!] Gênero: ");
-        String genero = scanner.nextLine();
-        generoService.cadastrarGenero(new Genero(genero));
+        Genero genero = lerDadosGenero();
+        boolean succ = generoService.cadastrarGenero(genero);
+        if(succ){
+            System.out.println("[!] Gênero cadastrado com sucesso.");
+        } else {
+            System.err.println("[!] Não foi possível cadastrar o gênero.");
+        }
     }
 
     public void listarGeneros() {
         List<Genero> generos = generoService.listar();
-        System.out.println("----------GÊNERO-----------");
+        System.out.println("----------GÊNERO----------");
         System.out.println(
             "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Descrição", 12) + " |"
         );
-        System.out.println("---------------------------");
+        System.out.println("-".repeat(26));
         if (!generos.isEmpty()) {
             for (Genero genero : generos) {
                 System.out.println(
@@ -73,25 +77,44 @@ public class GeneroMenu {
                 );
             }
         }
-        System.out.println("---------------------------");
+        System.out.println("-".repeat(26));
     }
 
     public void editarGenero() {
         listarGeneros();
-        System.out.println("[!] ID do Gênero: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("[!] Gênero (pressione [ENTER] para manter):");
-        String genero = scanner.nextLine();
-        generoService.editarGenero(id ,new Genero(genero.isEmpty() ? null : genero));
+        System.out.print("[!] ID do Gênero: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        Genero genero = lerDadosGenero();
+        
+        boolean succ = generoService.editarGenero(id ,genero);
+        if(succ){
+            System.out.println("[!] Gênero editado.");
+        } else {
+            System.err.println("[!] Não foi possível editar gênero.");
+        }
+    }
+
+    public Genero lerDadosGenero(){
+        Genero genero = new Genero();
+        System.out.print("[!] Gênero: ");
+        genero.setGenero(scanner.nextLine().trim());
+
+        return genero;
     }
 
     public void excluirGenero() {
             listarGeneros();
-            System.out.println("[!] ID do Gênero: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-            generoService.excluirGenero(id);
+            System.out.print("[!] ID do Gênero: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            boolean succ = generoService.excluirGenero(id);
+            if(succ){
+                System.out.println("[!] Gênero excluído.");
+            } else {
+                System.err.println("[!] Não foi possível excluir o gênero.");
+            }
     }
 
+    public static void main(String[] args) {
+        new GeneroMenu().imprimirMenu();
+    }
 }

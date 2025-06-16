@@ -53,27 +53,13 @@ public class AutorMenu {
     }
 
     public void cadastrarAutor() {
-        System.out.println("[!] Nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.println("[!] Data Nascimento (opcional, pressione [ENTER] para pular): ");
-        String dataNascimento = scanner.nextLine();
-
-        System.out.println("[!] Peseudônimo (opcional, pressione [ENTER] para pular): ");
-        String pseudonimo = scanner.nextLine();
-
-        Autor autor = new Autor(nome);
-
-        if (!dataNascimento.isEmpty()) {
-            Date dataNascimentoDate = DataUtils.stringToSqlDate(dataNascimento);
-            autor.setDataNascimento(dataNascimentoDate);
+        Autor autor = lerDadosAutor();
+        boolean succ = autorService.cadastrarAutor(autor);
+        if(succ) {
+            System.out.println("[!] Autor cadastrado com sucesso.");
+        } else {
+            System.err.println("[!] Não foi possível cadastrar autor");
         }
-
-        if (!pseudonimo.isEmpty()) {
-            autor.setPseudonimo(pseudonimo);
-        }
-
-        autorService.cadastrarAutor(autor);
     }
 
     public void listarAutores() {
@@ -97,35 +83,58 @@ public class AutorMenu {
 
     public void editarAutor() {
         listarAutores();
-        System.out.println("[!] ID do Autor: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("[!] Nome (pressione [ENTER] para manter atual): ");
-        String nome = scanner.nextLine();
-        System.out.println("[!] Data de Nascimento (pressione [ENTER] para manter atual): ");
-        String dataNascimento = scanner.nextLine();
-        System.out.println("[!] Pseudônimo (pressione [ENTER] para manter atual): ");
-        String pseudonimo = scanner.nextLine();
 
-        Autor autor = new Autor(nome.isEmpty() ? null : nome);
-        autor.setDataNascimento(dataNascimento.isEmpty() ? null
-                : DataUtils.stringToSqlDate(
-                        dataNascimento));
-        autor.setPseudonimo(pseudonimo.isEmpty() ? null : pseudonimo);
-        autorService.editar(id, autor);
+        System.out.print("[!] ID do Autor: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+
+        Autor autor = lerDadosAutor();
+        boolean succ = autorService.editar(id, autor);
+        if(succ){
+            System.out.println("[!] Autor editado.");
+        } else {
+            System.out.println("[!] Não foi possível editar autor.");
+        }
+    }
+
+    public Autor lerDadosAutor(){
+        Autor autor = new Autor();
+        System.out.print("[!] Nome: ");
+        autor.setNome(scanner.nextLine().trim());
+
+        System.out.print("[!] Data de Nascimento (opcional, pressione [ENTER] para pular): ");
+        String dataNascimento = scanner.nextLine().trim();
+
+        System.out.print("[!] Pseudônimo (opcional, pressione [ENTER] para pular): ");
+        autor.setPseudonimo(scanner.nextLine().trim());
+
+        if(!dataNascimento.isEmpty()){
+            Date novaData = DataUtils.stringToSqlDate(dataNascimento);
+            autor.setDataNascimento(novaData);
+        } else {
+            autor.setDataNascimento(null);
+        }
+
+        return autor;
     }
 
     public void excluirAutor() {
         try {
             listarAutores();
-            System.out.println();
-            System.out.println("[!] ID do autor: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-            autorService.excluir(id);
+            System.out.println("\n[!] ID do autor: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            boolean succ = autorService.excluir(id);
+            if(succ){
+                System.out.println("[!] Autor excluído.");
+            } else {
+                System.err.println("[!] Não foi possível excluir o autor.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new AutorMenu().imprimirMenu();
     }
 
 }

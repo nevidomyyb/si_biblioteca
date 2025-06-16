@@ -36,8 +36,19 @@ public class AutorDAO {
             );
 
             ps.setString(1, autor.getNome());
-            ps.setDate(2, autor.getDataNascimento());
-            ps.setString(3, autor.getPseudonimo());
+
+            if(autor.getDataNascimento() != null){
+                ps.setDate(2, autor.getDataNascimento());
+            } else {
+                ps.setNull(2, java.sql.Types.DATE);
+            }
+
+            if(validarString(autor.getPseudonimo())){
+                ps.setString(3, autor.getPseudonimo());
+            } else {
+                ps.setNull(3, java.sql.Types.NULL);
+            }
+            
             ps.executeUpdate();
             ps.close();
             return true;
@@ -65,40 +76,30 @@ public class AutorDAO {
 
     public boolean editarAutor(int id, Autor autor){
         try {
-            String query = "UPDATE autor SET ";
-            List<String> campos = new ArrayList<>();
-            List<Object> valores = new ArrayList<>();
-
-            if(validarString(autor.getNome())){
-                campos.add("nome = ?");
-                valores.add(autor.getNome());
+            ps = conexao.getConn().prepareStatement(
+                """
+                   UPDATE autor SET nome = ?, data_nascimento = ?,
+                   pseudonimo = ? WHERE id = ?  
+                """
+            );
+            ps.setString(1, autor.getNome());
+            
+            if(autor.getDataNascimento() != null){
+                ps.setDate(2, autor.getDataNascimento());
+            } else {
+                ps.setNull(2, java.sql.Types.DATE);
             }
 
             if(validarString(autor.getPseudonimo())){
-                campos.add("pseudonimo = ?");
-                valores.add(autor.getPseudonimo());
+                ps.setString(3, autor.getPseudonimo());
+            } else {
+                ps.setNull(3, java.sql.Types.NULL);
             }
 
-            if(autor.getDataNascimento() != null){
-                campos.add("data_nascimento = ?");
-                valores.add(autor.getDataNascimento());
-            }
-
-            if(campos.isEmpty()){
-                return false;
-            }
-
-            query += String.join(", ", campos) + "WHERE id = ?";
-            ps = conexao.getConn().prepareStatement(query);
-            int index = 1;
-            for(Object valor : valores){
-                ps.setObject(index++, valor);
-            }
-            ps.setInt(index, id);
+            ps.setInt(4, id);
             ps.executeUpdate();
             ps.close();
             return true;
-            
         } catch (SQLException e){
             e.printStackTrace();
             return false;
@@ -110,6 +111,28 @@ public class AutorDAO {
             return true;
         }
         return false;
+    }
+
+    private Autor obterAutorPorId(int id){
+        try {
+            ps = conexao.getConn().prepareStatement(
+                "SELECT * FROM autor WHERE id = ?"
+            );
+            Autor autor = null;
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                autor = new Autor();
+                autor.setNome(rs.getString("nome"));
+                autor.setDataNascimento(rs.getDate("data_nascimento"));
+                autor.setPseudonimo(rs.getString("pseudonimo"));
+                autor.setId(id);
+            }
+            return autor;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
     
 }

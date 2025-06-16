@@ -56,57 +56,86 @@ public class EditoraMenu {
     }
 
     private void cadastrarEditora() {
-        System.out.println("[!] Nome: ");
-        String nome = scanner.nextLine();
-        System.out.println("[!] CNPJ: ");
-        String cnpj = scanner.nextLine();
-        Endereco endereco = enderecoMenu.selecionarOuCadastrarEndereco();
-        Editora editora = new Editora(nome.isEmpty() ? null : nome, cnpj.isEmpty() ? null : cnpj);
-        editora.setEnderecoMatrizId(endereco == null ? 0 : endereco.getId());
-        editoraService.cadastrarEditora(editora);
+        Editora editora = lerDadosEditora();
+        boolean succ = editoraService.cadastrarEditora(editora);
+        if (succ) {
+            System.out.println("[!] Editora cadastrada com sucesso.");
+        } else {
+            System.err.println("[!] Não foi possível cadastrar editora.");
+        }
     }
 
     public void listarEditoras() {
         List<Editora> editoras = editoraService.listar();
-        System.out.println("--------------------EDITORAS------------------");
+        System.out.println("--------------------EDITORAS-----------------");
         System.out.println(
-            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 14) + 
-            " | " + ColunaUtils.formatarColuna("CNPJ", 14) + " |"
-        );
-        System.out.println("---------------------------------------------");
+                "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 14) +
+                        " | " + ColunaUtils.formatarColuna("CNPJ", 14) + " |");
+        System.out.println("-".repeat(45));
         if (!editoras.isEmpty()) {
             for (Editora editora : editoras) {
                 System.out.println(
-                    "| " + ColunaUtils.formatarColuna(String.valueOf(editora.getId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(editora.getNome(), 14) + " | " +
-                    ColunaUtils.formatarColuna(editora.getCnpj(), 14) + " |"
-                );
+                        "| " + ColunaUtils.formatarColuna(String.valueOf(editora.getId()), 6) + " | " +
+                                ColunaUtils.formatarColuna(editora.getNome(), 14) + " | " +
+                                ColunaUtils.formatarColuna(editora.getCnpj(), 14) + " |");
             }
         }
-        System.out.println("---------------------------------------------");
+        System.out.println("-".repeat(45));
     }
 
     private void editarEditora() {
         listarEditoras();
-        System.out.println("[!] ID da Editora: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("[!] Nome (pressione [ENTER] para manter atual): ");
-        String nome = scanner.nextLine();
-        System.out.println("[!] CNPJ (pressione [ENTER] para manter atual): ");
-        String cnpj = scanner.nextLine();
+
+        System.out.print("[!] ID da Editora: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        Editora editora = lerDadosEditora();
+        boolean succ = editoraService.editarEditora(id, editora);
+        if (succ) {
+            System.out.println("[!] Editora editada.");
+        } else {
+            System.err.println("[!] Não foi possível editar editora.");
+        }
+    }
+
+    private Editora lerDadosEditora() {
+        Editora editora = new Editora();
+        EnderecoMenu enderecoMenu = new EnderecoMenu();
+
+        System.out.print("[!] Nome: ");
+        editora.setNome(scanner.nextLine().trim());
+
+        System.out.print("[!] CNPJ: ");
+        editora.setCnpj(scanner.nextLine().trim());
+
+        System.out.println("ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
-        Editora editora = new Editora(nome.isEmpty() ? null : nome, cnpj.isEmpty() ? null : cnpj);
-        editora.setEnderecoMatrizId(endereco == null ? 0 : endereco.getId());
-        editoraService.editarEditora(id, editora);
+        if (endereco != null) {
+            editora.setEnderecoMatrizId(endereco.getId());
+        } else {
+            editora.setEnderecoMatrizId(0);
+        }
+
+        return editora;
     }
 
     private void excluirEditora() {
         listarEditoras();
-        System.out.println("[!] ID da Editora: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        editoraService.excluirEditora(id);
+        try {
+            System.out.print("[!] ID da Editora: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            boolean succ = editoraService.excluirEditora(id);
+            if(succ){
+                System.out.println("[!] Editora excluída.");
+            } else {
+                System.err.println("[!] Não foi possívele excluir editora.");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new EditoraMenu().imprimirMenu();
     }
 
 }

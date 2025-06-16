@@ -67,9 +67,7 @@ public class EnderecoService {
             return false;
         }
 
-        enderecoDAO.editarEndereco(id, endereco);
-        System.out.println("[!] Endereço editado com sucesso.");
-        return true;
+        return enderecoDAO.editarEndereco(id, endereco);
     }
 
     public boolean excluirEndereco(int id){
@@ -78,9 +76,7 @@ public class EnderecoService {
             return false;
         }
 
-        enderecoDAO.excluirEndereco(id);
-        System.out.println("[!] Endereço excluído");
-        return true;
+        return enderecoDAO.excluirEndereco(id);
     }
 
     public Endereco buscarEnderecoPorId(int id){
