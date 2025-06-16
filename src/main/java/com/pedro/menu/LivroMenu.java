@@ -87,6 +87,16 @@ public class LivroMenu {
         " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 25);
     }
 
+    public String imprimirLivroParaLeitores(int id){
+        Livro livro = livroService.buscarLivroPorId(id);
+        if(id <= 0 || livro == null){
+            return ColunaUtils.formatarColuna(null, 12) + " | " +
+            ColunaUtils.formatarColuna(null, 12) + " | " + ColunaUtils.formatarColuna(null, 25);
+        } 
+        return ColunaUtils.formatarColuna(livro.getTitulo(), 12) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) 
+        + " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 25);
+    }
+
     private void cadastrarLivro(){
         System.out.print("[!] Título: ");
         String titulo = scanner.nextLine();

@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.pedro.config.Conexao;
 import com.pedro.models.Editora;
@@ -92,12 +90,5 @@ public class EditoraDAO {
             e.printStackTrace();
             return false;
         }
-    }
-
-    private boolean validarString(String str) {
-        if (str != null && !str.isEmpty()) {
-            return true;
-        }
-        return false;
     }
 }

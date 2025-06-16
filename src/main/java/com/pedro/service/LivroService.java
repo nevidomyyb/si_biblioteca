@@ -1,12 +1,11 @@
 package com.pedro.service;
 
-import com.pedro.dao.LivroDAO;
-import com.pedro.models.Livro;
-
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pedro.dao.LivroDAO;
+import com.pedro.models.Livro;
 
 public class LivroService {
 

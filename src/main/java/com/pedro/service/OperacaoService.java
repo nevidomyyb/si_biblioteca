@@ -72,9 +72,7 @@ public class OperacaoService {
             return false;
         }
 
-        operacaoDao.locacao(operacao);
-        System.out.println("[!] Operação realizada com sucesso.");
-        return true;
+        return operacaoDao.locacao(operacao);
     }
 
     public boolean excluirOperacao(int id) {
@@ -83,12 +81,10 @@ public class OperacaoService {
             return false;
         }
 
-        operacaoDao.excluirOperacao(id);
-        System.out.println("[!] Operação excluída.");
-        return true;
+        return operacaoDao.excluirOperacao(id);
     }
 
-    public boolean editar(int id, Operacao operacao, String tipoUsuario) {
+    public boolean editar(int id, Operacao operacao) {
         if (operacao == null) {
             System.err.println("[!] Operação Inválida.");
             return false;
@@ -99,19 +95,26 @@ public class OperacaoService {
             return false;
         }
 
-        operacaoDao.editarOperacao(id, operacao);
-        System.out.println("[!] Operação editada com sucesso");
-        return true;
+        return operacaoDao.editarOperacao(id, operacao);
     }
 
     public boolean devolucao(int id, int funcionarioDevolucao, Date dataDevolvido) {
-        if (funcionarioDevolucao == 0) {
+        if (funcionarioDevolucao <= 0) {
             System.out.println("[!] O ID do Funcionário responsável pela devolução é obrigatório");
+            return false;
         }
 
-        operacaoDao.devolucao(id, funcionarioDevolucao, dataDevolvido);
-        return true;
+        if(id <= 0){
+            System.err.println("[!] ID Inválido.");
+            return false;
+        }
 
+        if(dataDevolvido == null){
+            System.err.println("[!] A data em que o livro foi devolvido é inválida.");
+            return false;
+        }
+
+        return operacaoDao.devolucao(id, funcionarioDevolucao, dataDevolvido);
     }
 
     private static boolean isNullOrEmpty(String str) {
@@ -119,17 +122,17 @@ public class OperacaoService {
     }
 
     public boolean valido(Operacao operacao) {
-        if (operacao.getFuncionarioLocacaoId() == 0) {
+        if (operacao.getFuncionarioLocacaoId() <= 0) {
             System.err.println("[!] ID do Funcionário responsável pela locação é obrigatório.");
             return false;
         }
 
-        if (operacao.getLocador() == 0) {
+        if (operacao.getLocador() <= 0) {
             System.err.println("[!] O ID do Locador é obrigatório.");
             return false;
         }
 
-        if (operacao.getExemplarId() == 0) {
+        if (operacao.getExemplarId() <= 0) {
             System.err.println("[!] O ID do Exemplar é obrigatório.");
             return false;
         }

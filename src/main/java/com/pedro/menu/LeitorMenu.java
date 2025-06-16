@@ -1,5 +1,8 @@
 package com.pedro.menu;
 
+import java.util.List;
+import java.util.Scanner;
+
 import com.pedro.config.IO;
 import com.pedro.models.Aluno;
 import com.pedro.models.Endereco;
@@ -7,11 +10,6 @@ import com.pedro.models.Professor;
 import com.pedro.service.AlunoService;
 import com.pedro.service.ProfessorService;
 import com.pedro.utils.ColunaUtils;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class LeitorMenu {
 
@@ -22,20 +20,6 @@ public class LeitorMenu {
 
     public LeitorMenu() {
         scanner = new Scanner(System.in);
-    }
-
-    private static String centralizadString(String text, int width) {
-        if (text == null) {
-            text = "";
-        }
-        if (text.length() >= width) {
-            return text;
-        }
-        int paddingSize = width - text.length();
-        int padStart = paddingSize / 2;
-        int padEnd = paddingSize - padStart;
-
-        return " ".repeat(padStart) + text + " ".repeat(padEnd);
     }
 
     public void imprimirMenu() {
@@ -145,9 +129,9 @@ public class LeitorMenu {
             sucesso = professorService.excluirProfessor(IDInt);
         }
         if (!sucesso) {
-            System.out.println("[!] Não foi possível excluir.");
+            System.err.println("[!] Não foi possível excluir o leitor.");
         } else {
-            System.out.println("[!] Excluído com sucesso.");
+            System.out.println("[!] Leitor excluído.");
         }
     }
 
@@ -173,9 +157,9 @@ public class LeitorMenu {
             sucesso = professorService.editarProfessor(IDInt, professor);
         }
         if (!sucesso) {
-            System.out.println("[!] Não foi possível cadastrar.");
+            System.err.println("[!] Não foi possível editar o leitor.");
         } else {
-            System.out.println("[!] Cadastrado com sucesso.");
+            System.out.println("[!] Leitor editado.");
         }
     }
 
@@ -196,41 +180,43 @@ public class LeitorMenu {
             sucesso = professorService.registrarProfessor(professor);
         }
         if (!sucesso) {
-            System.out.println("[!] Não foi possível editar.");
+            System.err.println("[!] Não foi possível cadastrar o leitor.");
+        } else {
+            System.out.println("[!] Leitor cadastrado com sucesso.");
         }
     }
 
     private Professor lerDadosProfessor(boolean modoEditar) {
         Professor prof = new Professor();
         EnderecoMenu enderecoMenu = new EnderecoMenu();
-        System.out.print("Nome: ");
+        System.out.print("[!] NOME: ");
         prof.setNome(scanner.nextLine());
 
-        System.out.print("CPF: ");
+        System.out.print("[!] CPF: ");
         prof.setCpf(scanner.nextLine());
 
-        System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
+        System.out.print("[!] TELEFONE (opcional, pressione [ENTER] para pular): ");
         prof.setTelefone(scanner.nextLine());
 
-        System.out.print("Email: ");
+        System.out.print("[!] EMAIL: ");
         prof.setEmail(scanner.nextLine());
 
-        System.out.println("ENDEREÇO");
+        System.out.println("[!] ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
         if (endereco != null)
             prof.setEnderecoId(endereco.getId());
 
-        System.out.print("Disciplina: ");
+        System.out.print("[!] DISCIPLINA: ");
         prof.setDisciplina(scanner.nextLine());
 
-        System.out.print("Credencial: ");
+        System.out.print("[!] CREDENCIAL: ");
         prof.setCredencial(scanner.nextLine());
 
         if (!modoEditar) {
-            System.out.print("Login: ");
+            System.out.print("[!] LOGIN: ");
             prof.setLogin(scanner.nextLine());
 
-            System.out.print("Senha: ");
+            System.out.print("[!] SENHA: ");
             prof.setSenha(scanner.nextLine());
         }
         return prof;
@@ -240,40 +226,40 @@ public class LeitorMenu {
     private Aluno lerDadosAluno(boolean modoEditar) {
         Aluno aluno = new Aluno();
         EnderecoMenu enderecoMenu = new EnderecoMenu();
-        System.out.print("Nome: ");
+        System.out.print("[!] NOME: ");
         aluno.setNome(scanner.nextLine());
 
-        System.out.print("CPF: ");
+        System.out.print("[!] CPF: ");
         aluno.setCpf(scanner.nextLine());
 
-        System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
+        System.out.print("[!] TELEFONE (opcional, pressione [ENTER] para pular): ");
         aluno.setTelefone(scanner.nextLine());
 
-        System.out.print("Email: ");
+        System.out.print("[!] EMAIL: ");
         aluno.setEmail(scanner.nextLine());
 
-        System.out.print("Curso: ");
+        System.out.print("[!] CURSO: ");
         aluno.setCurso(scanner.nextLine());
 
-        System.out.print("Periodo: ");
+        System.out.print("[!] PERÍODO: ");
         aluno.setPeriodo(scanner.nextLine());
 
-        System.out.print("Matrícula: ");
+        System.out.print("[!] MATRÍCULA: ");
         aluno.setMatricula(scanner.nextLine());
 
-        System.out.print("Turno: ");
+        System.out.print("[!] TURNO: ");
         aluno.setTurno(scanner.nextLine());
 
-        System.out.println("ENDEREÇO");
+        System.out.println("[!] ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
         if (endereco != null)
             aluno.setEnderecoId(endereco.getId());
 
         if (!modoEditar) {
-            System.out.print("Login: ");
+            System.out.print("[!] LOGIN: ");
             aluno.setLogin(scanner.nextLine());
 
-            System.out.print("Senha: ");
+            System.out.print("[!] SENHA: ");
             aluno.setSenha(scanner.nextLine());
         }
 

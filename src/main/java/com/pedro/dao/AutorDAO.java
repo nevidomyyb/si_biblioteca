@@ -3,8 +3,6 @@ package com.pedro.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.pedro.config.Conexao;
 import com.pedro.models.Autor;
@@ -112,27 +110,4 @@ public class AutorDAO {
         }
         return false;
     }
-
-    private Autor obterAutorPorId(int id){
-        try {
-            ps = conexao.getConn().prepareStatement(
-                "SELECT * FROM autor WHERE id = ?"
-            );
-            Autor autor = null;
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                autor = new Autor();
-                autor.setNome(rs.getString("nome"));
-                autor.setDataNascimento(rs.getDate("data_nascimento"));
-                autor.setPseudonimo(rs.getString("pseudonimo"));
-                autor.setId(id);
-            }
-            return autor;
-        } catch (SQLException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
 }

@@ -41,8 +41,13 @@ public class FuncionarioMenu {
     }
 
     private void cadastrarFuncionario() {
-        Funcionario func = lerDadosFuncionario();
-        funcionarioService.registrarFuncionario(func);
+        Funcionario func = lerDadosFuncionario(false);
+        boolean succ = funcionarioService.registrarFuncionario(func);
+        if(succ){
+            System.out.println("[!] Funcionário cadastrado com sucesso.");
+        } else {
+            System.err.println("[!] Não foi possível cadastrar o funcionário.");
+        }
     }
 
         private void listarFuncionarios() {
@@ -80,80 +85,66 @@ public class FuncionarioMenu {
         }
 
     private void editarFuncionario() {
-        System.out.print("ID Funcionário: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.print("NOME (pressione [ENTER] para manter atual): ");
-        String nome = scanner.nextLine();
-
-        System.out.print("EMAIL (pressione [ENTER] para manter atual): ");
-        String email = scanner.nextLine();
-
-        System.out.print("CPF (pressione [ENTER] para manter atual): ");
-        String cpf = scanner.nextLine();
-
-        System.out.print("TELEFONE (pressione [ENTER] para manter atual): ");
-        String telefone = scanner.nextLine();
-
-        System.out.print("CREDENCIAL (pressione [ENTER] para manter atual): ");
-        String credencial = scanner.nextLine();
-
-        System.out.print("LOGIN (pressione [ENTER] para manter atual): ");
-        String login = scanner.nextLine();
-
-        System.out.print("SENHA (pressione [ENTER] para manter atual): ");
-        String senha = scanner.nextLine();
-
-        Endereco endereco = enderecoMenu.cadastrarOuPular();
-        Funcionario funcionario = new Funcionario(cpf, nome, telefone, email, credencial, id, login, senha);
-        funcionario.setEnderecoId(endereco == null ? 0 : endereco.getId());
-
-        funcionarioService.editarFuncionario(id, funcionario);
+        System.out.print("[!] ID do Funcionário: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        Funcionario funcionario = lerDadosFuncionario(true);
+        boolean succ = funcionarioService.editarFuncionario(id, funcionario);
+        if(succ){
+            System.out.println("[!] Funcionário editado.");
+        } else {
+            System.err.println("[!] Não foi possível editar o funcionário.");
+        }
     }
 
     private void removerFuncionario() {
         System.out.print("ID Funcionário: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        funcionarioService.excluirFuncionario(id);
+        boolean succ = funcionarioService.excluirFuncionario(id);
+        if(succ){
+            System.out.println("[!] Funcionário removido.");
+        } else {
+            System.err.println("[!] Não foi possível remover o funcionário.");
+        }
     }
 
-    private Funcionario lerDadosFuncionario() {
+    private Funcionario lerDadosFuncionario(boolean modoEditar) {
         Funcionario f = new Funcionario();
         EnderecoMenu enderecoMenu = new EnderecoMenu();
 
-        System.out.print("Nome: ");
+        System.out.print("[!] NOME: ");
         f.setNome(scanner.nextLine());
 
-        System.out.print("Email: ");
+        System.out.print("[!] EMAIL: ");
         f.setEmail(scanner.nextLine());
 
-        System.out.print("Telefone (opcional, pressione [ENTER] para pular): ");
+        System.out.print("[!] TELEFONE (opcional, pressione [ENTER] para pular): ");
         String telefone = scanner.nextLine();
         if (!telefone.isEmpty()) {
             f.setTelefone(telefone);
         }
 
-        System.out.print("CPF: ");
+        System.out.print("[!] CPF: ");
         f.setCpf(scanner.nextLine());
 
-        System.out.print("Credencial: ");
+        System.out.print("[!] Credencial: ");
         f.setCredencial(scanner.nextLine());
 
-        System.out.println("ENDEREÇO");
+        System.out.println("[!] ENDEREÇO");
         Endereco endereco = enderecoMenu.cadastrarOuPular();
 
         if (endereco != null) {
             f.setEnderecoId(endereco.getId());
+        } else {
+            f.setEnderecoId(0);
         }
+        if(!modoEditar){
+            System.out.print("[!] Login: ");
+            f.setLogin(scanner.nextLine());
 
-        System.out.print("Login: ");
-        f.setLogin(scanner.nextLine());
-
-        System.out.print("Senha: ");
-        f.setSenha(scanner.nextLine());
-
+            System.out.print("[!] Senha: ");
+            f.setSenha(scanner.nextLine());
+        }
         return f;
     }
 

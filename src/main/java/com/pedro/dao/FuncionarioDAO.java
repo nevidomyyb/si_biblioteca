@@ -1,15 +1,11 @@
 package com.pedro.dao;
 
-import com.pedro.config.Conexao;
-import com.pedro.models.Aluno;
-import com.pedro.models.Funcionario;
-
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.pedro.config.Conexao;
+import com.pedro.models.Funcionario;
 
 public class FuncionarioDAO {
 
@@ -22,64 +18,41 @@ public class FuncionarioDAO {
 
     public boolean editarFuncionario(int id, Funcionario funcionario) {
         try {
-            String query = "UPDATE funcionario SET ";
-            List<String> campos = new ArrayList<String>();
-            List<Object> valores = new ArrayList<Object>();
-
-            if(validarString(funcionario.getNome())){
-                campos.add("nome = ?");
-                valores.add(funcionario.getNome());
-            }
-
+            ps = conexao.getConn().prepareStatement(
+                """
+                   UPDATE funcionario SET nome = ?,
+                   telefone = ?, email = ?, credencial = ?,
+                   cpf = ?, endereco_id = ? 
+                """
+            );
+            
+            ps.setString(1, funcionario.getNome());
             if(validarString(funcionario.getTelefone())){
-                campos.add("telefone = ?");
-                valores.add(funcionario.getTelefone());
+                ps.setString(2, funcionario.getTelefone());
+            } else {
+                ps.setNull(2, java.sql.Types.VARCHAR);
+            }
+            ps.setString(3, funcionario.getEmail());
+            ps.setString(4, funcionario.getCredencial());
+            ps.setString(5, funcionario.getCpf());
+            if(funcionario.getEnderecoId() != 0){
+                ps.setInt(6, funcionario.getEnderecoId());
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
             }
 
-            if(validarString(funcionario.getEmail())){
-                campos.add("email = ?");
-                valores.add(funcionario.getEmail());
-            }
-
-            if(validarString(funcionario.getCredencial())){
-                campos.add("credencial = ?");
-                valores.add(funcionario.getCredencial());
-            }
-
-            if(validarString(funcionario.getCpf())){
-                campos.add("cpf = ?");
-                valores.add(funcionario.getTelefone());
-            }
-
-            if(validarString(funcionario.getLogin())){
-                campos.add("login = ?");
-                valores.add(funcionario.getLogin());
-            }
-
-            if(validarString(funcionario.getSenha())){
-                campos.add("senha = ?");
-                valores.add(funcionario.getSenha());
-            }
-
-            query += String.join(", ", campos) + "WHERE id = ?";
-            ps = conexao.getConn().prepareStatement(query);
-            int index = 1;
-            for(Object valor : valores){
-                ps.setObject(index++, valor);
-            }
-            ps.setInt(index, id);
             ps.executeUpdate();
             ps.close();
-            return true;            
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
     }
 
-    public void cadastrarFuncionario(Funcionario funcionario) {
+    public boolean cadastrarFuncionario(Funcionario funcionario) {
         AutenticacaoDAO autenticacaoDAO = new AutenticacaoDAO();
-        boolean sucesso = autenticacaoDAO.cadastrarUsuario(funcionario, null, null);
+        return autenticacaoDAO.cadastrarUsuario(funcionario, null, null);
 
     }
 

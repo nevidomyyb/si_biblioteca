@@ -1,16 +1,11 @@
 package com.pedro.dao;
 
-import com.pedro.config.Conexao;
-import com.pedro.models.Endereco;
-import com.pedro.models.Livro;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
+import com.pedro.config.Conexao;
+import com.pedro.models.Livro;
 
 public class LivroDAO {
 

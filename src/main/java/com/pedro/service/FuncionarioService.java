@@ -1,13 +1,12 @@
 package com.pedro.service;
 
-import com.pedro.dao.FuncionarioDAO;
-import com.pedro.models.Aluno;
-import com.pedro.models.Funcionario;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pedro.dao.FuncionarioDAO;
+import com.pedro.models.Funcionario;
 
 public class FuncionarioService {
 
@@ -66,9 +65,7 @@ public class FuncionarioService {
             return false;
         }
 
-        funcionarioDAO.editarFuncionario(id, funcionario);
-        System.out.println("[!] Funcionário editado com sucesso.");
-        return true;
+        return funcionarioDAO.editarFuncionario(id, funcionario);
     }
 
     public boolean registrarFuncionario (Funcionario funcionario) {
@@ -76,22 +73,14 @@ public class FuncionarioService {
         if(!valido){
             return false;
         }
-        funcionarioDAO.cadastrarFuncionario(funcionario);
-        System.out.println("[!] Funcionário cadastrado com sucesso");
-        return true;
+        return funcionarioDAO.cadastrarFuncionario(funcionario);
     }
 
     public boolean excluirFuncionario(int id) {
         if (id <= 0) {
             return false;
         }
-        boolean sucesso = funcionarioDAO.excluirFuncionario(id);
-        if (!sucesso) {
-            System.err.println("[!] Erro ao excluir funcionário");
-            return false;
-        }
-        System.out.println("[!] Excluindo funcionário");
-        return true;
+        return funcionarioDAO.excluirFuncionario(id);
     }
 
     private static boolean isNullOrEmpty(String str){

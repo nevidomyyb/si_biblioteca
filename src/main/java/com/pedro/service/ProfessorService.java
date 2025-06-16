@@ -1,14 +1,12 @@
 package com.pedro.service;
 
-import com.pedro.dao.FuncionarioDAO;
-import com.pedro.dao.ProfessorDAO;
-import com.pedro.models.Funcionario;
-import com.pedro.models.Professor;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pedro.dao.ProfessorDAO;
+import com.pedro.models.Professor;
 
 public class ProfessorService {
 

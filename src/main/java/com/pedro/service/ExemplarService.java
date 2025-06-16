@@ -34,23 +34,14 @@ public class ExemplarService {
             return false;
         }
 
-        boolean succ = exemplarDao.editarExemplar(id, exemplar);
-        if(!succ){
-            return false;
-        }
-
-        return true;
+        return exemplarDao.editarExemplar(id, exemplar);
     }
 
     public boolean excluirExemplar(int id) {
         if(id <= 0){
             System.err.println("[!] ID Inválido");
         }
-        boolean succ = exemplarDao.excluirExemplar(id);
-        if(!succ){
-            return false;
-        }
-        return true;
+        return exemplarDao.excluirExemplar(id);
     }
 
     public List<Exemplar> listarExemplares() {

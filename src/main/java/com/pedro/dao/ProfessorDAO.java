@@ -1,14 +1,11 @@
 package com.pedro.dao;
 
-import com.pedro.config.Conexao;
-import com.pedro.models.Aluno;
-import com.pedro.models.Funcionario;
-import com.pedro.models.Professor;
-
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.pedro.config.Conexao;
+import com.pedro.models.Professor;
 
 public class ProfessorDAO {
 

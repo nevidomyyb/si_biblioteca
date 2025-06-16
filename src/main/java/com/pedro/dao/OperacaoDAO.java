@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.pedro.config.Conexao;
 import com.pedro.models.Operacao;
@@ -85,88 +83,65 @@ public class OperacaoDAO {
 
     public boolean editarOperacao(int id, Operacao operacao) {
         try {
-            String query = "UPDATE operacao SET ";
-            List<String> campos = new ArrayList<String>();
-            List<Object> valores = new ArrayList<Object>();
+            ps = conexao.getConn().prepareStatement(
+                """
+                UPDATE operacao SET funcionario_locacao_id = ?,
+                funcionario_devolucao_id = ?,
+                aluno_id = ?, professor_id = ?,
+                funcionario_id = ?,
+                exemplar_id = ?, tipo_operacao = ?,
+                data_locacao = ?, data_devolucao = ?,
+                data_devolvido = ?
+                WHERE id = ?
+                """
+            );
 
-            if (operacao.getFuncionarioLocacaoId() != 0) {
-                campos.add("funcionario_locacao_id = ?");
-                valores.add(operacao.getFuncionarioLocacaoId());
+            ps.setInt(1, operacao.getFuncionarioLocacaoId());
+            
+            if(operacao.getFuncionarioDevolucaoId() != 0){
+                ps.setInt(2, operacao.getFuncionarioDevolucaoId());
+            } else {
+               ps.setNull(2, java.sql.Types.INTEGER);
             }
 
-            if (operacao.getFuncionarioDevolucaoId() != 0) {
-                campos.add("funcionario_devolucao_id = ?");
-                valores.add(operacao.getFuncionarioDevolucaoId());
-            }
-            if (operacao.getTipoUsuario() != null) {
-                if (operacao.getTipoUsuario().equals("1")) {
-                    campos.add("aluno_id = ?");
-                    valores.add(operacao.getLocador());
-
-                    campos.add("professor_id = ?");
-                    valores.add(null);
-
-                    campos.add("funcionario_id = ?");
-                    valores.add(null);
-                } else if (operacao.getTipoUsuario().equals("2")) {
-                    campos.add("professor = ?");
-                    valores.add(operacao.getLocador());
-
-                    campos.add("aluno_id = ?");
-                    valores.add(null);
-
-                    campos.add("funcionario_id = ?");
-                    valores.add(null);
-                } else if (operacao.getTipoUsuario().equals("3")) {
-                    campos.add("funcionario_id = ?");
-                    valores.add(operacao.getLocador());
-
-                    campos.add("aluno_id = ?");
-                    valores.add(null);
-
-                    campos.add("professor_id = ?");
-                    valores.add(null);
+            if(operacao.getTipoUsuario() != null){
+                if(operacao.getTipoUsuario().equals("1")){
+                    ps.setInt(3, operacao.getLocador());
+                    ps.setNull(4, java.sql.Types.INTEGER);
+                    ps.setNull(5, java.sql.Types.INTEGER);
+                } else if(operacao.getTipoUsuario().equals("2")){
+                    ps.setNull(3, java.sql.Types.INTEGER);
+                    ps.setInt(4, operacao.getLocador());
+                    ps.setNull(5, java.sql.Types.INTEGER);
+                } else if(operacao.getTipoUsuario().equals("3")){
+                    ps.setNull(3, java.sql.Types.INTEGER);
+                    ps.setNull(4, java.sql.Types.INTEGER);
+                    ps.setInt(5, operacao.getLocador());
                 }
             }
 
-            if (operacao.getExemplarId() != 0) {
-                campos.add("exemplar_id = ?");
-                valores.add(operacao.getExemplarId());
+            if(operacao.getExemplarId() != 0){
+                ps.setInt(6, operacao.getExemplarId());
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
             }
 
-            if (operacao.getTipoOperacao() != null) {
-                if (validarString(operacao.getTipoOperacao().toString())) {
-                    campos.add("tipo_operacao = ?");
-                    valores.add(operacao.getTipoOperacao().toString());
-                }   
-            }
-
-            if (operacao.getDataLocacao() != null) {
-                campos.add("data_locacao = ?");
-                valores.add(operacao.getDataLocacao());
-            }
-
-            if (operacao.getDataDevolucao() != null) {
-                campos.add("data_devolucao = ?");
-                valores.add(operacao.getDataDevolucao());
-            }
+            ps.setString(7, operacao.getTipoOperacao().toString());
+            ps.setDate(8, operacao.getDataLocacao());
+            ps.setDate(9, operacao.getDataDevolucao());
 
             if (operacao.getDataDevolvido() != null) {
-                campos.add("data_devolvido = ?");
-                valores.add(operacao.getDataDevolvido());
+                ps.setDate(10, operacao.getDataDevolvido());
+            } else {
+                ps.setNull(10, java.sql.Types.DATE);
             }
 
-            query += String.join(", ", campos) + "WHERE id = ?";
-            ps = conexao.getConn().prepareStatement(query);
-            int index = 1;
-            for (Object valor : valores) {
-                ps.setObject(index++, valor);
-            }
-            ps.setInt(index, id);
+            ps.setInt(11, id);
+
             ps.executeUpdate();
             ps.close();
             return true;
-        } catch (SQLException e) {
+        } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
@@ -184,11 +159,9 @@ public class OperacaoDAO {
 
             ps.executeUpdate();
             ps.close();
-            System.out.println("[!] Operação fechada com sucesso!");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("[!] Erro ao tentar fechar operação");
             return false;
         }
     }
@@ -220,7 +193,6 @@ public class OperacaoDAO {
         } else if ("3".equals(tipoUsuario)) {
             colunaUsuario = "funcionario_id = ?";
         } else {
-            System.out.println("[!] Tipo de usuário inválido para verificação de atraso.");
             return false;
         }
 
@@ -238,13 +210,6 @@ public class OperacaoDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        return false;
-    }
-
-    private boolean validarString(String str) {
-        if (str != null && !str.isEmpty()) {
-            return true;
         }
         return false;
     }

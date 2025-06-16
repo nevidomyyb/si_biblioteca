@@ -1,13 +1,10 @@
 package com.pedro.menu;
 
 import java.sql.Date;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.swing.text.AttributeSet.ColorAttribute;
 
 import com.pedro.config.IO;
 import com.pedro.models.Operacao;
@@ -63,52 +60,37 @@ public class OperacaoMenu {
     }
 
     public void locacao() {
+        Operacao operacao = new Operacao();
         System.out.print("[!] ID do Exemplar: ");
-        int exemplar = scanner.nextInt();
-        scanner.nextLine();
+        operacao.setExemplarId(Integer.parseInt(scanner.nextLine().trim()));
 
-        System.out.print("[!] ID do funcionário responsável pela LOCAÇÃO: ");
-        int funcionario_locacao = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("[!] ID ID Funcionário Locação: ");
+        operacao.setFuncionarioLocacaoId(Integer.parseInt(scanner.nextLine().trim()));
 
-        System.out.println("[!] Qual tipo de usuário gostaria de realizar a locação?");
+        System.out.println("[!] Tipo Usuário: ");
         System.out.println("[1] Aluno");
         System.out.println("[2] Professor");
         System.out.println("[3] Funcionário");
 
-        String tipoUsuario = scanner.nextLine().trim();
+        operacao.setTipoUsuario(scanner.nextLine().trim());
+        
+        System.out.print("[!] ID do Locador: ");
+        operacao.setLocador(Integer.parseInt(scanner.nextLine().trim()));
 
-        int locador = 0;
-
-        if (tipoUsuario.equals("1")) {
-            System.out.print("[!] ID do Aluno: ");
-            locador = scanner.nextInt();
-        } else if (tipoUsuario.equals("2")) {
-            System.out.print("[!] ID do Professor: ");
-            locador = scanner.nextInt();
-        } else if (tipoUsuario.equals("3")) {
-            System.out.print("[!] ID do Funcionário: ");
-            locador = scanner.nextInt();
-        } 
-        scanner.nextLine(); 
-
-        boolean podeLocar = operacaoService.usuarioPossuiAtrasos(locador, tipoUsuario);
+        boolean podeLocar = operacaoService.usuarioPossuiAtrasos(operacao.getLocador(), operacao.getTipoUsuario());
 
         if (podeLocar == true) {
-            Date dataLocacao = DataUtils.getDataSqlAtual();
-            Date dataDevolucao = DataUtils.getFuturaSqlDate(14);
-
-            Operacao operacao = new Operacao(
-                    funcionario_locacao,
-                    locador,
-                    exemplar,
-                    TipoOperacao.LOCACAO,
-                    dataLocacao,
-                    dataDevolucao);
-
-            operacao.setTipoUsuario(tipoUsuario);
-            operacaoService.locacao(operacao);
-
+            operacao.setDataLocacao(DataUtils.getDataSqlAtual());
+            operacao.setDataDevolucao(DataUtils.getFuturaSqlDate(14));
+            operacao.setTipoOperacao(TipoOperacao.LOCACAO);
+            boolean succ = operacaoService.locacao(operacao);
+            if(succ){
+                System.out.println("[!] Locação realizada com sucesso.");
+            } else {
+                System.err.println("[!] Não foi possível realizar a locação.");
+            }
+        } else {
+            System.err.println("[!] Locador não está liberado para realizar locações");
         }
     }
 
@@ -117,12 +99,17 @@ public class OperacaoMenu {
         int idOperacao = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.print("[!] ID do funcionário responsável pela devolução: ");
+        System.out.print("[!] ID Funcionário Devolução: ");
         int funcionario_devolucao = scanner.nextInt();
         scanner.nextLine();
 
         Date dataDevolvido = DataUtils.getDataSqlAtual();
-        operacaoService.devolucao(idOperacao, funcionario_devolucao, dataDevolvido);
+        boolean succ = operacaoService.devolucao(idOperacao, funcionario_devolucao, dataDevolvido);
+        if(succ){
+            System.out.println("[!] Devolução realizada.");
+        } else {
+            System.err.println("[!] Não foi possível realizar a devolução.");
+        }
     }
 
     public void listarOperacoes() {
@@ -138,15 +125,14 @@ public class OperacaoMenu {
                         " | " + ColunaUtils.formatarColuna("Data Loc.", 12) + " | "
                         + ColunaUtils.formatarColuna("Data Dev.", 12) +
                         " | " + ColunaUtils.formatarColuna("Devolvido Em", 12) + " |");
-        System.out.println(
-                "----------------------------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(114));
         if (!operacoes.isEmpty()) {
             for (Operacao operacao : operacoes) {
                 String status;
 
                 if(operacao.getDataDevolvido() != null) {
                     status = operacao.getDataDevolvido().toString();
-                } else if(operacao.getDataDevolucao().before(DataUtils.getDataSqlAtual())){
+                } else if(DataUtils.getDataSqlAtual().after(operacao.getDataDevolucao())){
                     status = "Atrasado";
                 } else {
                     status = "Pendente";
@@ -165,70 +151,87 @@ public class OperacaoMenu {
                                 ColunaUtils.formatarColuna(operacao.getDataDevolucao().toString(), 12) + " | " +
                                 ColunaUtils.formatarColuna(status, 12)  
                                 + " |");
-                System.out.println(
-                        "----------------------------------------------------------------------------------------------------------------");
+                System.out.println("-".repeat(114));
             }
         }
     }
 
     public void editarOperacao() {
         System.out.print("[!] ID da Operação: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        Operacao operacao = lerDadosOperacao();
+        boolean succ = operacaoService.editar(id, operacao);
+        if(succ){
+            System.out.println("[!] Operação editada.");
+        } else {
+            System.err.println("[!] Não foi possível editar a operação");
+        }
+    }
 
-        System.out.print("[!] ID Funcionário Locação (pressione [ENTER] para manter atual): ");
-        String funcionarioLocacao = scanner.nextLine().trim();
+    public Operacao lerDadosOperacao(){
+        Operacao operacao = new Operacao();
 
-        System.out.print("[!] ID Funcionário Devolução (pressione [ENTER] para manter atual): ");
+        System.out.print("[!] ID Funcionário Locação: ");
+        operacao.setFuncionarioLocacaoId(Integer.parseInt(scanner.nextLine().trim()));
+
+        System.out.print("[!] ID Funcionário Devolução (opcional, pressione [ENTER] para pular): ");
         String funcionarioDevolucao = scanner.nextLine().trim();
+        if(funcionarioDevolucao.isEmpty()){
+            operacao.setFuncionarioDevolucaoId(0);
+        } else {
+            operacao.setFuncionarioDevolucaoId(Integer.parseInt(funcionarioDevolucao));
+        }
 
-        System.out.println("[!] Tipo Usuário (pressione [ENTER] para manter atual): ");
+        System.out.println("[!] Tipo Usuário: ");
         System.out.println("[1] Aluno");
         System.out.println("[2] Professor");
         System.out.println("[3] Funcionário");
-        String tipoUsuario = scanner.nextLine().trim();
-
-        System.out.print("[!] ID do Locador (pressione [ENTER] para manter atual): ");
-        String locador = scanner.nextLine().trim();
+        operacao.setTipoUsuario(scanner.nextLine().trim());
+        
+        System.out.print("[!] ID do Locador: ");
+        operacao.setLocador(Integer.parseInt(scanner.nextLine().trim()));
 
         System.out.print("[!] ID do Exemplar: ");
-        String exemplar = scanner.nextLine().trim();
+        operacao.setExemplarId(Integer.parseInt(scanner.nextLine().trim()));
 
-        System.out.println("[!] Tipo Operação (pressione [ENTER] para manter atual):");
+        System.out.println("[!] Tipo Operação: ");
         System.out.println("[1] Locação");
         System.out.println("[2] Devolução");
         String tipoOperacao = scanner.nextLine().trim();
 
-        System.out.print("[!] Data Locação (pressione [ENTER] para manter atual): ");
-        String dataLocacao = scanner.nextLine().trim();
+        if(tipoOperacao.equals("1")){
+            operacao.setTipoOperacao(TipoOperacao.LOCACAO);
+        } else if(tipoOperacao.equals("2")){
+            operacao.setTipoOperacao(TipoOperacao.DEVOLUCAO);
+        }
 
-        System.out.print("[!] Data Devolução (pressione [ENTER] para manter atual): ");
-        String dataDevolucao = scanner.nextLine().trim();
+        System.out.print("[!] Data Locação: ");
+        operacao.setDataLocacao(DataUtils.stringToSqlDate(scanner.nextLine().trim()));
 
-        System.out.print("[!] Data Devolvido (pressione [ENTER] para manter atual): ");
+        System.out.print("[!] Data Devolução: ");
+        operacao.setDataDevolucao(DataUtils.stringToSqlDate(scanner.nextLine().trim()));
+
+        System.out.print("[!] Data Devolvido (opcional, pressione [ENTER] para pular): ");
         String dataDevolvido = scanner.nextLine().trim();
-
-        Operacao operacao = new Operacao(
-                funcionarioLocacao.isEmpty() ? 0 : Integer.parseInt(funcionarioLocacao),
-                locador.isEmpty() ? 0 : Integer.parseInt(locador),
-                exemplar.isEmpty() ? 0 : Integer.parseInt(exemplar),
-                tipoOperacao.isEmpty() ? null
-                        : tipoOperacao.equals("1") ? TipoOperacao.LOCACAO : TipoOperacao.DEVOLUCAO,
-                dataLocacao.isEmpty() ? null : DataUtils.stringToSqlDate(dataLocacao),
-                dataDevolucao.isEmpty() ? null : DataUtils.stringToSqlDate(dataDevolucao));
-
-        operacao.setFuncionarioDevolucaoId(funcionarioDevolucao.isEmpty() ? 0 : Integer.parseInt(funcionarioDevolucao));
-        operacao.setTipoUsuario(tipoUsuario.isEmpty() ? null : tipoUsuario);
-        operacao.setDataDevolvido(dataDevolvido.isEmpty() ? null : DataUtils.stringToSqlDate(dataDevolvido));
-
-        operacaoService.editar(id, operacao, tipoUsuario);
+        if(dataDevolvido.isEmpty()){
+            operacao.setDataDevolvido(null);
+        } else {
+            operacao.setDataDevolvido(DataUtils.stringToSqlDate(dataDevolvido));
+        }
+        
+        return operacao;
     }
 
     public void excluirOperacao() {
         System.out.println("[!] ID da Operação: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        operacaoService.excluirOperacao(id);
+        boolean succ = operacaoService.excluirOperacao(id);
+        if(succ){
+            System.out.println("[!] Operação excluída.");
+        } else {
+            System.err.println("[!] Não foi possível excluir a operação");
+        }
     }
 
     public static void main(String[] args) {

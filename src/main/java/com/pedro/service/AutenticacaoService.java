@@ -2,9 +2,6 @@ package com.pedro.service;
 
 
 import com.pedro.dao.AutenticacaoDAO;
-import com.pedro.models.Aluno;
-import com.pedro.models.Funcionario;
-import com.pedro.models.Professor;
 
 public class AutenticacaoService {
 

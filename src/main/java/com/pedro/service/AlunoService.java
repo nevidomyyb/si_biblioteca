@@ -1,13 +1,12 @@
 package com.pedro.service;
 
-import com.pedro.dao.AlunoDAO;
-import com.pedro.models.Aluno;
-
-import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pedro.dao.AlunoDAO;
+import com.pedro.models.Aluno;
 
 public class AlunoService {
 
