@@ -39,6 +39,7 @@ public class ProfessorDAO {
             ps.setString(6, professor.getDisciplina());
             ps.setString(7, professor.getCredencial());
             ps.setInt(8, id);
+            ps.executeUpdate();
             ps.close();
             return true;
 

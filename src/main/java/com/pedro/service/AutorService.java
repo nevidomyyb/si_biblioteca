@@ -36,6 +36,13 @@ public class AutorService {
         return autorList;
     }
 
+    public Autor buscarAutorPorId(int id){
+        if(id <= 0){
+            System.err.println("[!] Id Inválido.");
+            return null;
+        }
+        return autorDao.buscarAutorPorId(id);
+    }
 
     public boolean cadastrarAutor(Autor autor) {
         boolean valido = validarAutor(autor);

@@ -29,7 +29,7 @@ public class ExemplarService {
     }
 
     public boolean editarExemplar(int id, Exemplar exemplar) {
-        if (exemplar.getId() <= 0) {
+        if (id <= 0) {
             System.out.println("ID Inválido.");
             return false;
         }

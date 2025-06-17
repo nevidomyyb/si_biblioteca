@@ -22,7 +22,7 @@ public class FuncionarioDAO {
                 """
                    UPDATE funcionario SET nome = ?,
                    telefone = ?, email = ?, credencial = ?,
-                   cpf = ?, endereco_id = ? 
+                   cpf = ?, endereco_id = ? WHERE id = ?
                 """
             );
             
@@ -40,7 +40,7 @@ public class FuncionarioDAO {
             } else {
                 ps.setNull(6, java.sql.Types.INTEGER);
             }
-
+            ps.setInt(7, id);
             ps.executeUpdate();
             ps.close();
             return true;

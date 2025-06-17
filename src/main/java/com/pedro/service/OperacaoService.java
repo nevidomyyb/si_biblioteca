@@ -27,7 +27,7 @@ public class OperacaoService {
                 Operacao operacao = new Operacao();
                 operacao.setId(operacoes.getInt("id"));
                 operacao.setFuncionarioLocacaoId(operacoes.getInt("funcionario_locacao_id"));
-                operacao.setFuncionarioLocacaoId(operacoes.getInt("funcionario_devolucao_id"));
+                operacao.setFuncionarioDevolucaoId(operacoes.getInt("funcionario_devolucao_id"));
 
                 if (operacoes.getInt("aluno_id") != 0) {
                     operacao.setTipoUsuario("Aluno");

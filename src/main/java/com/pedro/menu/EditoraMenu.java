@@ -15,13 +15,11 @@ public class EditoraMenu {
 
     private Scanner scanner;
     private EditoraService editoraService;
-    private EnderecoMenu enderecoMenu;
     private IO io;
 
     public EditoraMenu() {
         scanner = new Scanner(System.in);
         editoraService = new EditoraService();
-        enderecoMenu = new EnderecoMenu();
         io = new IO();
     }
 
@@ -83,6 +81,14 @@ public class EditoraMenu {
         System.out.println("-".repeat(45));
     }
 
+    public String imprimirEditora(int id) {
+        Editora editora = editoraService.buscarEditoraPorId(id);
+        if (editora == null) {
+            return ColunaUtils.formatarColuna(null, 12);
+        }
+        return ColunaUtils.formatarColuna(editora.getNome(), 12);
+    }
+
     private void editarEditora() {
         listarEditoras();
 
@@ -124,12 +130,12 @@ public class EditoraMenu {
             System.out.print("[!] ID da Editora: ");
             int id = Integer.parseInt(scanner.nextLine().trim());
             boolean succ = editoraService.excluirEditora(id);
-            if(succ){
+            if (succ) {
                 System.out.println("[!] Editora excluída.");
             } else {
                 System.err.println("[!] Não foi possívele excluir editora.");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

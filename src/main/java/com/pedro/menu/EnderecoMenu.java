@@ -58,15 +58,15 @@ public class EnderecoMenu {
     private void listarEnderecos() {
         List<Endereco> enderecos = enderecoService.listarEnderecos();
         System.out.println(
-                "--------------------------------------------ENDEREÇOS---------------------------------------");
+                "--------------------------------------------ENDEREÇOS----------------------------------------");
         System.out.println(
                 "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
                         " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
                         + ColunaUtils.formatarColuna("NÚMERO", 6) +
                         " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
-                        +
+                        + 
                         " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
-        System.out.println("-".repeat(90));
+        System.out.println("-".repeat(93));
         if (!enderecos.isEmpty()) {
             for (Endereco endereco : enderecos) {
                 System.out.println(
@@ -74,34 +74,33 @@ public class EnderecoMenu {
                                 ColunaUtils.formatarColuna(endereco.getRua(), 12) +
                                 " | " + ColunaUtils.formatarColuna(endereco.getBairro(), 12) +
                                 " | " + ColunaUtils.formatarColuna(endereco.getNumero(), 6) +
-                                " | " + ColunaUtils.formatarColuna(endereco.getCep(), 10) +
+                                " | " + ColunaUtils.formatarColuna(endereco.getCep(), 10) + " | " +
                                 ColunaUtils.formatarColuna(endereco.getCidade(), 12) +
                                 " | " + ColunaUtils.formatarColuna(endereco.getEstado(), 12) + " |");
             }
         }
-        System.out.println("-".repeat(90));
+        System.out.println("-".repeat(93));
 
     }
 
     public String imprimirEnderecoPorId(int id) {
-        Endereco endereco = enderecoService.buscarEnderecoPorId(id);
-
-        if (id <= 0 || endereco == null) {
+        if (id <= 0) {
             return ColunaUtils.formatarColuna(null, 6) + " | " +
-                    ColunaUtils.formatarColuna(null, 12) + " | " +
-                    ColunaUtils.formatarColuna(null, 12) + " | " +
-                    ColunaUtils.formatarColuna(null, 6) + " | " +
-                    ColunaUtils.formatarColuna(null, 10) + " | " +
-                    ColunaUtils.formatarColuna(null, 12) + " | " +
-                    ColunaUtils.formatarColuna(null, 12);
+                ColunaUtils.formatarColuna(null, 12) + " | " +
+                ColunaUtils.formatarColuna(null, 12) + " | " +
+                ColunaUtils.formatarColuna(null, 6) + " | " +
+                ColunaUtils.formatarColuna(null, 10) + " | " +
+                ColunaUtils.formatarColuna(null, 12) + " | " +
+                ColunaUtils.formatarColuna(null, 6);
         }
+        Endereco endereco = enderecoService.buscarEnderecoPorId(id);
         return ColunaUtils.formatarColuna(String.valueOf(id), 6) + " | " +
-                ColunaUtils.formatarColuna(endereco.getRua(), 12) + " | " +
-                ColunaUtils.formatarColuna(endereco.getBairro(), 12) + " | " +
-                ColunaUtils.formatarColuna(endereco.getNumero(), 6) + " | " +
-                ColunaUtils.formatarColuna(endereco.getCep(), 10) + " | " +
-                ColunaUtils.formatarColuna(endereco.getCidade(), 12) + " | " +
-                ColunaUtils.formatarColuna(endereco.getEstado(), 12);
+            ColunaUtils.formatarColuna(endereco.getRua(), 12) + " | " +
+            ColunaUtils.formatarColuna(endereco.getBairro(), 12) + " | " +
+            ColunaUtils.formatarColuna(endereco.getNumero(), 6) + " | " +
+            ColunaUtils.formatarColuna(endereco.getCep(), 10) + " | " +
+            ColunaUtils.formatarColuna(endereco.getCidade(), 12) + " | " +
+            ColunaUtils.formatarColuna(endereco.getEstado(), 6);
     }
 
     private void editarEndereco() {

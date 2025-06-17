@@ -39,6 +39,7 @@ public class LivroMenu {
                     break;
                 case 3: 
                     editarLivro();
+                    break;
                 case 4:
                     excluirLivro();
                     break;
@@ -52,49 +53,49 @@ public class LivroMenu {
 
     private void listarLivros(){
         List<Livro> livros = livroService.listarLivros();
-        System.out.println("---------------------------------------------------LIVRO-----------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------LIVRO-----------------------------------------------------------------------------");
         System.out.println(
-        "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Título", 12) +
-        " | " + ColunaUtils.formatarColuna("Edição", 12) + " | " + ColunaUtils.formatarColuna("Sinopse", 25) +
+        "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Título", 30) +
+        " | " + ColunaUtils.formatarColuna("Edição", 12) + " | " + ColunaUtils.formatarColuna("Sinopse", 45) +
         " | " + ColunaUtils.formatarColuna("ID Edit.", 12) + " | " + ColunaUtils.formatarColuna("ID Gên.", 12) + 
         " | " + ColunaUtils.formatarColuna("ID Autor", 12) + " |"
         );
-        System.out.println("-".repeat(115));
+        System.out.println("-".repeat(153));
         if(!livros.isEmpty()){
             for(Livro livro : livros){
                 System.out.println(
                     "| " + ColunaUtils.formatarColuna(String.valueOf(livro.getId()), 6) + " | " +
-                    ColunaUtils.formatarColuna(livro.getTitulo(), 12) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) +
-                    " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 25) + " | " + ColunaUtils.formatarColuna(String.valueOf(livro.getEditorId()), 12) +
+                    ColunaUtils.formatarColuna(livro.getTitulo(), 30) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) +
+                    " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 45) + " | " + ColunaUtils.formatarColuna(String.valueOf(livro.getEditorId()), 12) +
                     " | " + ColunaUtils.formatarColuna(String.valueOf(livro.getGeneroId()), 12) + " | " + ColunaUtils.formatarColuna(String.valueOf(livro.getAutorId()), 12) +
                     " |"
                 );
             }
         }
-        System.out.println("-".repeat(115));
+        System.out.println("-".repeat(153));
     }
 
     public String imprimirLivro(int id){
         Livro livro = livroService.buscarLivroPorId(id);
         if(id <= 0 || livro == null) {
             return ColunaUtils.formatarColuna(null, 6) + 
-            " | " + ColunaUtils.formatarColuna(null, 12) + " | " +
+            " | " + ColunaUtils.formatarColuna(null, 30) + " | " +
             ColunaUtils.formatarColuna(null, 12) + " | " +
-            ColunaUtils.formatarColuna(null, 25);
+            ColunaUtils.formatarColuna(null, 45);
         }
         return ColunaUtils.formatarColuna(String.valueOf(livro.getId()), 6) + " | " +
-        ColunaUtils.formatarColuna(livro.getTitulo(), 12) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) +
-        " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 25);
+        ColunaUtils.formatarColuna(livro.getTitulo(), 30) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) +
+        " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 45);
     }
 
     public String imprimirLivroParaLeitores(int id){
         Livro livro = livroService.buscarLivroPorId(id);
         if(id <= 0 || livro == null){
-            return ColunaUtils.formatarColuna(null, 12) + " | " +
-            ColunaUtils.formatarColuna(null, 12) + " | " + ColunaUtils.formatarColuna(null, 25);
+            return ColunaUtils.formatarColuna(null, 30) + " | " +
+            ColunaUtils.formatarColuna(null, 12) + " | " + ColunaUtils.formatarColuna(null, 45);
         } 
-        return ColunaUtils.formatarColuna(livro.getTitulo(), 12) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) 
-        + " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 25);
+        return ColunaUtils.formatarColuna(livro.getTitulo(), 30) + " | " + ColunaUtils.formatarColuna(livro.getEdicao(), 12) 
+        + " | " + ColunaUtils.formatarColuna(livro.getSinopse(), 45);
     }
 
     private void cadastrarLivro(){

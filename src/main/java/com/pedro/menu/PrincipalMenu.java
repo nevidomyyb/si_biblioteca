@@ -28,9 +28,11 @@ public class PrincipalMenu {
                 case 3:
                     OperacaoMenu operacaoMenu = new OperacaoMenu();
                     operacaoMenu.imprimirMenuOperacao();
+                    break;
                 case 4:
                     FuncionarioMenu funcionarioMenu = new FuncionarioMenu();
                     funcionarioMenu.exibirMenu();
+                    break;
                 case 5:
                     GerencialMenu gerencialMenu = new GerencialMenu();
                     gerencialMenu.imprimirMenuGerencial();

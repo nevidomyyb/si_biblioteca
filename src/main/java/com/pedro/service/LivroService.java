@@ -26,7 +26,7 @@ public class LivroService {
     }
 
     public boolean editarLivro(int id, Livro livro) {
-        if (livro.getId() <= 0) {
+        if (id <= 0) {
             System.err.println("Erro: ID do livro inválido.");
             return false;
         }

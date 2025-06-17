@@ -37,6 +37,7 @@ public class FuncionarioService {
             funcionarioList = new ArrayList<Funcionario>();
             while (rs.next()) {
                 Funcionario func = new Funcionario();
+                func.setId(rs.getInt("id"));
                 func.setCpf(rs.getString("cpf"));
                 func.setNome(rs.getString("nome"));
                 func.setTelefone(rs.getString("telefone"));

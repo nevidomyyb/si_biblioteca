@@ -31,6 +31,10 @@ public abstract class Pessoa {
         return id;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
     public int getEnderecoId() {
         return enderecoId;
     }

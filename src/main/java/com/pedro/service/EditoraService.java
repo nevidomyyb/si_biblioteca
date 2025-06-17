@@ -36,6 +36,14 @@ public class EditoraService {
         return editoraList;
     }
 
+    public Editora buscarEditoraPorId(int id){
+        if(id <= 0){
+            System.err.println("[!] ID Inválido");
+            return null;
+        }
+        return editoraDao.buscarEditoraPorId(id);
+    }
+
     public boolean cadastrarEditora(Editora editora){
         boolean valido = validarEditora(editora);
         if(!valido){

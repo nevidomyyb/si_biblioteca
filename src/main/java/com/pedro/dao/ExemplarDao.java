@@ -29,7 +29,7 @@ public class ExemplarDao {
 
     public boolean cadastrarExemplar(Exemplar exemplar) {
         try {
-            String SQL = "INSERT INTO exemplar(livroId) VALUES (?)";
+            String SQL = "INSERT INTO exemplar(livro_id) VALUES (?)";
 
             ps = conexao.getConn().prepareStatement(SQL);
 
@@ -46,7 +46,7 @@ public class ExemplarDao {
 
     public boolean editarExemplar(int id, Exemplar exemplar) {
         try {
-            String SQL = "UPDATE exemplar SET livroId = ? WHERE id = ?";
+            String SQL = "UPDATE exemplar SET livro_id = ? WHERE id = ?";
 
             ps = conexao.getConn().prepareStatement(SQL);
 

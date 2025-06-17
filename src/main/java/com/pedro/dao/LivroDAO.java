@@ -16,8 +16,8 @@ public class LivroDAO {
         conexao = new Conexao();
     }
 
-    public void cadastrarLivro(Livro livro) {
-        String SQL = "INSERT INTO livro (titulo, editor_id, edicao, sinopse, genero_id, autor_id) " +
+    public boolean cadastrarLivro(Livro livro) {
+        String SQL = "INSERT INTO livro (titulo, editora_id, edicao, sinopse, genero_id, autor_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -32,11 +32,10 @@ public class LivroDAO {
 
             ps.executeUpdate();
             ps.close();
-
-            System.out.println("Livro inserido com sucesso!");
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Erro ao inserir livro.");
+            return false;
         }
     }
 
@@ -71,7 +70,7 @@ public class LivroDAO {
     public boolean editarLivro(int id, Livro livro) {
         try {
             String SQL = "UPDATE livro SET " +
-                    "titulo = ?, editorId = ?, edicao = ?, sinopse = ?, generoId = ?, autorId = ? " +
+                    "titulo = ?, editora_id = ?, edicao = ?, sinopse = ?, genero_id = ?, autor_id = ? " +
                     "WHERE id = ?";
 
             ps = conexao.getConn().prepareStatement(SQL);

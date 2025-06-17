@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import com.pedro.config.Conexao;
 import com.pedro.models.Autor;
 
@@ -102,6 +104,28 @@ public class AutorDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Autor buscarAutorPorId(int id){
+        try {
+            ps = conexao.getConn().prepareStatement(
+                "SELECT * FROM autor WHERE id = ?"
+            );
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                Autor autor = new Autor();
+                autor.setNome(rs.getString("nome"));
+                autor.setDataNascimento(rs.getDate("data_nascimento"));
+                autor.setPseudonimo(rs.getString("pseudonimo"));
+                autor.setId(id);
+                return autor;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private boolean validarString(String str) {

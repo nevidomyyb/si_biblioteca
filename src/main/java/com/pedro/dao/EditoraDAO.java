@@ -91,4 +91,26 @@ public class EditoraDAO {
             return false;
         }
     }
+
+    public Editora buscarEditoraPorId(int id){
+        try {
+            ps = conexao.getConn().prepareStatement(
+                "SELECT * FROM editora WHERE id = ?"
+            );
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                Editora editora = new Editora();
+                editora.setNome(rs.getString("nome"));
+                editora.setCnpj(rs.getString("cnpj"));
+                editora.setEnderecoMatrizId(rs.getInt("endereco_id"));
+                editora.setId(id);
+                return editora;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

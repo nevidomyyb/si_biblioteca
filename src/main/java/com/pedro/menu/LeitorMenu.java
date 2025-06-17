@@ -40,36 +40,34 @@ public class LeitorMenu {
                     List<Aluno> alunos = alunoService.listarAlunos();
                     List<Professor> professores = professorService.listarProfessors();
                     System.out.println(
-                            "----------------------------------------------------------------------------------------------------------------LEITORES--------------------------------------------------------------------------------------------------------------");
+                            "----------------------------------------------------------------------------------------------------------LEITORES-------------------------------------------------------------------------------------------------------");
                     System.out.println(
-                            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12)
+                            "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 20)
                                     + " | " + ColunaUtils.formatarColuna("CPF", 14) +
                                     " | " + ColunaUtils.formatarColuna("Email", 25) + " | "
                                     + ColunaUtils.formatarColuna("Telefone", 12) +
                                     " | " + ColunaUtils.formatarColuna("Matrícula/Credencial", 20) + " | "
-                                    + ColunaUtils.formatarColuna("Login", 12) +
-                                    " | " + ColunaUtils.formatarColuna("Senha", 12) + " | "
-                                    + ColunaUtils.formatarColuna("ID End.", 6) + " | "
+                                    + ColunaUtils.formatarColuna("Usuário", 12) +
+                                    " | " + ColunaUtils.formatarColuna("ID End.", 6) + " | "
                                     + ColunaUtils.formatarColuna("RUA", 12) +
                                     " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
                                     + ColunaUtils.formatarColuna("NÚMERO", 6) +
                                     " | " + ColunaUtils.formatarColuna("CEP", 10) + " | "
                                     + ColunaUtils.formatarColuna("CIDADE", 12)
                                     +
-                                    " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
-                    System.out.println("-".repeat(230));
+                                    " | " + ColunaUtils.formatarColuna("ESTADO", 6) + " |");
+                    System.out.println("-".repeat(217));
                     if (!alunos.isEmpty()) {
                         for (Aluno aluno : alunos) {
                             System.out.println(
                                     "| " + ColunaUtils.formatarColuna(String.valueOf(aluno.getId()), 6) + " | "
-                                            + ColunaUtils.formatarColuna(aluno.getNome(), 12) + " | " +
+                                            + ColunaUtils.formatarColuna(aluno.getNome(), 20) + " | " +
                                             ColunaUtils.formatarColuna(aluno.getCpf(), 14) + 
                                             " | " + ColunaUtils.formatarColuna(aluno.getEmail(), 25) + " | "
                                             + ColunaUtils.formatarColuna(aluno.getTelefone(), 12) +
                                             " | " + ColunaUtils.formatarColuna(aluno.getMatricula(), 20) + " | "
                                             + ColunaUtils.formatarColuna(aluno.getLogin(), 12) +
-                                            " | " + ColunaUtils.formatarColuna(aluno.getSenha(), 12) + " | "
-                                            + enderecoMenu.imprimirEnderecoPorId(aluno.getEnderecoId()));
+                                            " | " + enderecoMenu.imprimirEnderecoPorId(aluno.getEnderecoId()) + " |");
                         };
                     }
 
@@ -78,14 +76,14 @@ public class LeitorMenu {
 
                             System.out.println(
                                 "| " + ColunaUtils.formatarColuna(String.valueOf(professor.getId()), 6) + " | " +
-                                ColunaUtils.formatarColuna(professor.getNome(), 12) + " | " + ColunaUtils.formatarColuna(professor.getCpf(), 14) +
-                                " | " + ColunaUtils.formatarColuna(professor.getEmail(), 12) + " | " + 
+                                ColunaUtils.formatarColuna(professor.getNome(), 20) + " | " + ColunaUtils.formatarColuna(professor.getCpf(), 14) +
+                                " | " + ColunaUtils.formatarColuna(professor.getEmail(), 25) + " | " + 
                                 ColunaUtils.formatarColuna(professor.getTelefone(), 12) + " | " + ColunaUtils.formatarColuna(professor.getCredencial(), 20) +
-                                " | " + ColunaUtils.formatarColuna(professor.getLogin(), 12) + " | " + ColunaUtils.formatarColuna(professor.getSenha(), 12) + 
-                                " | " + enderecoMenu.imprimirEnderecoPorId(professor.getEnderecoId())
+                                " | " + ColunaUtils.formatarColuna(professor.getLogin(), 12) + " | "  + enderecoMenu.imprimirEnderecoPorId(professor.getEnderecoId()) + " |"
                             );
                         }
                     }
+                    System.out.println("-".repeat(217));
                     break;
                 case 3:
                     editarLeitor();

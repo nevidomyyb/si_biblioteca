@@ -64,12 +64,12 @@ public class AutorMenu {
 
     public void listarAutores() {
         List<Autor> autores = autorService.listar();
-        System.out.println("---------------------------AUTORES--------------------------");
+        System.out.println("----------------------------AUTORES----------------------------");
         System.out.println(
             "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12) + 
             " | " + ColunaUtils.formatarColuna("Data de Nascimento", 20) + " | " + ColunaUtils.formatarColuna("Pseudônimo", 12) + " |"
         );
-        System.out.println("------------------------------------------------------------");
+        System.out.println("-".repeat(63));
         if (!autores.isEmpty()) {
             for (Autor autor : autores) {
                 System.out.println(
@@ -78,7 +78,19 @@ public class AutorMenu {
                 );
             }
         }
-        System.out.println("------------------------------------------------------------");
+        System.out.println("-".repeat(63));
+    }
+
+    public String imprimirAutor(int id){
+        Autor autor = autorService.buscarAutorPorId(id);
+        if(autor == null){
+            return ColunaUtils.formatarColuna(null, 12) + " | " + 
+            ColunaUtils.formatarColuna(null, 12) + " | " +
+            ColunaUtils.formatarColuna(null, 12);
+        }
+        return ColunaUtils.formatarColuna(autor.getNome(), 12) + " | " +
+        ColunaUtils.formatarColuna(autor.getPseudonimo(), 12) + " | " + 
+        ColunaUtils.formatarColuna(autor.getDataNascimento().toString(), 12);
     }
 
     public void editarAutor() {

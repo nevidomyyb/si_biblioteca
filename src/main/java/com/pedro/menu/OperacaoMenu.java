@@ -64,7 +64,7 @@ public class OperacaoMenu {
         System.out.print("[!] ID do Exemplar: ");
         operacao.setExemplarId(Integer.parseInt(scanner.nextLine().trim()));
 
-        System.out.print("[!] ID ID Funcionário Locação: ");
+        System.out.print("[!] ID Funcionário Locação: ");
         operacao.setFuncionarioLocacaoId(Integer.parseInt(scanner.nextLine().trim()));
 
         System.out.println("[!] Tipo Usuário: ");
@@ -115,17 +115,17 @@ public class OperacaoMenu {
     public void listarOperacoes() {
         List<Operacao> operacoes = operacaoService.listar();
         System.out.println(
-                "-------------------------------------------------------OPERAÇÕES-------------------------------------------------");
+                "---------------------------------------------------------------------OPERAÇÕES--------------------------------------------------------------");
         System.out.println(
-                "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Func. Loc.", 6) +
-                        " | " + ColunaUtils.formatarColuna("Func. Dev.", 6) + " | "
-                        + ColunaUtils.formatarColuna("Locador", 6) +
+                "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Func. Loc.", 15) +
+                        " | " + ColunaUtils.formatarColuna("Func. Dev.", 15) + " | "
+                        + ColunaUtils.formatarColuna("Locador", 15) +
                         " | " + ColunaUtils.formatarColuna("Tipo Usuário", 12) + " | "
                         + ColunaUtils.formatarColuna("Operação", 12) +
                         " | " + ColunaUtils.formatarColuna("Data Loc.", 12) + " | "
                         + ColunaUtils.formatarColuna("Data Dev.", 12) +
                         " | " + ColunaUtils.formatarColuna("Devolvido Em", 12) + " |");
-        System.out.println("-".repeat(114));
+        System.out.println("-".repeat(140));
         if (!operacoes.isEmpty()) {
             for (Operacao operacao : operacoes) {
                 String status;
@@ -140,20 +140,20 @@ public class OperacaoMenu {
 
                 System.out.println(
                         "| " + ColunaUtils.formatarColuna(String.valueOf(operacao.getId()), 6) + " | " +
-                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioLocacaoId()), 6)
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioLocacaoId()), 15)
                                 + " | " +
-                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioDevolucaoId()), 6)
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getFuncionarioDevolucaoId()), 15)
                                 + " | " +
-                                ColunaUtils.formatarColuna(String.valueOf(operacao.getLocador()), 6) + " | " +
+                                ColunaUtils.formatarColuna(String.valueOf(operacao.getLocador()), 15) + " | " +
                                 ColunaUtils.formatarColuna(operacao.getTipoUsuario(), 12) + " | " +
                                 ColunaUtils.formatarColuna(operacao.getTipoOperacao().toString(), 12) + " | " +
                                 ColunaUtils.formatarColuna(operacao.getDataLocacao().toString(), 12) + " | " +
                                 ColunaUtils.formatarColuna(operacao.getDataDevolucao().toString(), 12) + " | " +
                                 ColunaUtils.formatarColuna(status, 12)  
                                 + " |");
-                System.out.println("-".repeat(114));
-            }
-        }
+                            }
+                        }
+        System.out.println("-".repeat(140));
     }
 
     public void editarOperacao() {

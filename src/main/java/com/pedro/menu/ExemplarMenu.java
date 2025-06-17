@@ -54,13 +54,13 @@ public class ExemplarMenu {
     private void listarExemplares() {
         LivroMenu livroMenu = new LivroMenu();
         List<Exemplar> exemplares = exemplarService.listarExemplares();
-        System.out.println("----------------------------------EXEMPLAR-----------------------------------");
+        System.out.println("--------------------------------------------------EXEMPLAR----------------------------------------------------------");
         System.out.println(
             "| " + ColunaUtils.formatarColuna("ID", 6) + " | " +
-            ColunaUtils.formatarColuna("ID Livro", 6) + " | " + ColunaUtils.formatarColuna("Título", 12) +
-            " | " + ColunaUtils.formatarColuna("Edição", 12) + " | " + ColunaUtils.formatarColuna("Sinopse", 25) + " |"
+            ColunaUtils.formatarColuna("ID Livro", 6) + " | " + ColunaUtils.formatarColuna("Título", 30) +
+            " | " + ColunaUtils.formatarColuna("Edição", 12) + " | " + ColunaUtils.formatarColuna("Sinopse", 45) + " |"
         );
-        System.out.println("-".repeat(77));
+        System.out.println("-".repeat(116));
         if (!exemplares.isEmpty()) {
             for (Exemplar exemplar : exemplares) {
                 System.out.println(
@@ -69,7 +69,7 @@ public class ExemplarMenu {
                 );
             }
         }
-        System.out.println("-".repeat(77));
+        System.out.println("-".repeat(116));
     }
 
     private void cadastrarExemplar() {

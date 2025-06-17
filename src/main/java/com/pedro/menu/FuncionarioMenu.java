@@ -53,21 +53,20 @@ public class FuncionarioMenu {
         private void listarFuncionarios() {
             List<Funcionario> funcionarios = funcionarioService.listarFuncionarios();
             System.out.println(
-                    "---------------------------------------------------------------------------------------------------FUNCIONÁRIOS----------------------------------------------------------------------------------------------");
+                    "--------------------------------------------------------------------------------------------FUNCIONÁRIOS--------------------------------------------------------------------------------------");
             System.out.println(
                     "| " + ColunaUtils.formatarColuna("ID", 6) + " | " + ColunaUtils.formatarColuna("Nome", 12) +
                             " | " + ColunaUtils.formatarColuna("Email", 25) + " | "
                             + ColunaUtils.formatarColuna("Telefone", 12) +
                             " | " + ColunaUtils.formatarColuna("Credencial", 12) + " | "
-                            + ColunaUtils.formatarColuna("Login", 12) +
-                            " | " + ColunaUtils.formatarColuna("Senha", 12) + " | " + "| "
+                            + ColunaUtils.formatarColuna("Usuário", 12) +
+                            " | "
                             + ColunaUtils.formatarColuna("ID End.", 6) + " | " + ColunaUtils.formatarColuna("RUA", 12) +
                             " | " + ColunaUtils.formatarColuna("BAIRRO", 12) + " | "
                             + ColunaUtils.formatarColuna("NÚMERO", 6) +
                             " | " + ColunaUtils.formatarColuna("CEP", 10) + " | " + ColunaUtils.formatarColuna("CIDADE", 12)
-                            +
-                            " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
-            System.out.println("-".repeat(205));
+                            + " | " + ColunaUtils.formatarColuna("ESTADO", 12) + " |");
+            System.out.println("-".repeat(190));
             if (!funcionarios.isEmpty()) {
                 for (Funcionario funcionario : funcionarios) {
                     System.out.println(
@@ -77,11 +76,11 @@ public class FuncionarioMenu {
                                     + ColunaUtils.formatarColuna(funcionario.getTelefone(), 12) +
                                     " | " + ColunaUtils.formatarColuna(funcionario.getCredencial(), 12) + " | "
                                     + ColunaUtils.formatarColuna(funcionario.getLogin(), 12) +
-                                    " | " + ColunaUtils.formatarColuna(funcionario.getSenha(), 12) + " | " +
-                                    enderecoMenu.imprimirEnderecoPorId(funcionario.getEnderecoId())
+                                    " | "  + enderecoMenu.imprimirEnderecoPorId(funcionario.getEnderecoId()) + " |"
                     );
                 }
             }
+            System.out.println("-".repeat(190));
         }
 
     private void editarFuncionario() {
